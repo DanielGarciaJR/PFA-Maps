@@ -10,7 +10,7 @@ const Search = () => {
                 <Image priority src="/images/mk_logo.png" alt="Multitakr logo"  width={480} height={480}/>
                 
                 <form>
-                    <input type="text" placeholder="Search an address" ></input>
+                    <input type="text" placeholder="Search an address here" ></input>
                 </form>
             </div>
         </Layout>
