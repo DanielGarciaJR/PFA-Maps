@@ -1,24 +1,21 @@
 
-import {useEffect, useState,useRef} from 'react';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import {useEffect,useRef} from 'react';
 import Layout from '@/components/Layout';
 import mapboxgl from 'mapbox-gl';
 import mapbox from '../api/mapbox';
 
-
+//Mapbox token
 mapboxgl.accessToken = mapbox.token;
 
 
 const Map = ({location}) => {
 
-  const [checkedItems, setCheckedItems] = useState({});
-
-
+    //Map's containers
     const mapContainer = useRef(null);
     const map = useRef(null);
     const marker = useRef(null);
 
-
+    //use effect to diplay map.
     useEffect(() => {
         if(map.current) return;
     
@@ -32,13 +29,12 @@ const Map = ({location}) => {
             pitch: 40
         });
 
+        //Add marker
         marker.current = new mapboxgl.Marker().setLngLat([location.lng, location.lat]).addTo(map.current);
 
         map.current.on('load', () => {
-
-           
             map.current.addControl(new mapboxgl.NavigationControl());
-  
+            //Edificios 3D (El estilo global del mapa tiene los edificios 3d pero puedes dejar este).
             map.current.addLayer({
               'id': '3d-building',
               'source': 'composite',
@@ -59,29 +55,17 @@ const Map = ({location}) => {
                 'fill-extrusion-opacity': .6
               }
             });  
-
-           
-      });
+        });
 
     });
 
-    /*const handleChange = (event) => {
-      const { name, checked } = event.target;
-      setCheckedItems({ ...checkedItems, [name]: checked });
-    };*/
-
-
+    //Display layers.
     function setLayerVisibility(layerName, isVisible) {
       const visibility = isVisible ? 'visible' : 'none';
       if (map.current) {
         map.current.setLayoutProperty(layerName, 'visibility', visibility);
       }
     }
-    
-  
-    /*setLayerVisibility('trees-sd', checkedItems.trees_sd);
-    setLayerVisibility('fire-hazard-zones', checkedItems.fire_hazard_zones);
-    setLayerVisibility('topo-40', checkedItems.topo_40);*/
 
     return(
         
