@@ -1,14 +1,21 @@
 import { Inter } from 'next/font/google'
 import { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 import Layout from '@/components/Layout';
 import Image from 'next/image';
 import mapbox from './api/mapbox';
 import Map from './app/Map';
+import dynamic from 'next/dynamic';
 
+
+const AddressAutofill = dynamic(
+  () => import('@mapbox/search-js-react').then((module) => module.AddressAutofill),
+  { ssr: false }
+);
 
 const inter = Inter({ subsets: ['latin'] })
 
- 
+
 export default function Home() {
 
   const [location, setLocation] = useState('');
@@ -42,25 +49,32 @@ export default function Home() {
   return ( 
     <>
        <Layout>
-            {!showMap ? (
-              <div className="flex flex-col justify-center items-center mt-40 pt-20">  
-                <Image priority src="/images/mk_logo.png" alt="Multitakr logo"  width={480} height={480}/>
         
-                <form onSubmit={handleSubmit}>
-              
-                  <input
-                    className='mt-10 w-96 h-10 rounded border-2 border-slate-300 mr-5' 
-                    type="text" 
-                    placeholder="Search an address here" 
-                    value={location} 
-                    onChange={handleChangue}
-                  >
-                  </input>
+       {!showMap ? (
+              <div className="flex flex-col justify-center items-center mt-[14%] pt-[3%] ml-[25%] mr-[25%] bg-white rounded-lg "> 
+               
+                <Image priority src="/images/mk_logo.png" alt="Multitakr logo"  width={480} height={480}/>
 
-                  <button type='submit' className="bg-purple-700 w-20 h-10 rounded text-white">Search</button>
+                <form onSubmit={handleSubmit}>
+               
+                  <AddressAutofill accessToken={mapbox.token}> 
+                    <input
+                      name='adress'
+                      className='mt-12 w-96 h-11 rounded-full border-2 border-slate-300 mr-5 pl-4 mb-[16%]' 
+                      type="text" 
+                      autoComplete="street-address"
+                      placeholder="Search an address here" 
+                      value={location} 
+                      onChange={handleChangue}
+                    >
+                    </input>
+                  </AddressAutofill>
+                 
+                  <button type='submit' className="bg-purple-700 w-[45px] h-[45px] rounded-full text-white hover:bg-purple-600"><FaSearch className='w-11 h-5'/></button>
                 </form>
-              </div>
+                </div>
             ): <Map location={coordinates}></Map>}
+            
         </Layout>
     </>    
   )

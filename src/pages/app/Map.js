@@ -1,14 +1,18 @@
 
-import {useEffect,useRef} from 'react';
+import {useState,useEffect,useRef} from 'react';
 import Layout from '@/components/Layout';
 import mapboxgl from 'mapbox-gl';
 import mapbox from '../api/mapbox';
+import TilesetMenu from '@/components/TilesetMenu';
+import SatelliteMenu from '@/components/SatelliteMenu';
 
 //Mapbox token
 mapboxgl.accessToken = mapbox.token;
 
 
 const Map = ({location}) => {
+
+    //state
 
     //Map's containers
     const mapContainer = useRef(null);
@@ -23,40 +27,63 @@ const Map = ({location}) => {
     
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: 'mapbox://styles/elgerardo/clgzrw11p006901qz9myq3i0d',
+            style: 'mapbox://styles/elgerardo/clh9inqj500c601pod3cg4lh7',
             center: [location.lng,location.lat],
-            zoom: 15,
+            zoom: 20,
             pitch: 40
         });
 
         //Add marker
         marker.current = new mapboxgl.Marker().setLngLat([location.lng, location.lat]).addTo(map.current);
+        //Add zoom control
+        map.current.on('load', () => { map.current.addControl(new mapboxgl.NavigationControl()); });
 
-        map.current.on('load', () => {
-            map.current.addControl(new mapboxgl.NavigationControl());
-            //Edificios 3D (El estilo global del mapa tiene los edificios 3d pero puedes dejar este).
-            map.current.addLayer({
-              'id': '3d-building',
-              'source': 'composite',
-              'source-layer': 'building',
-              'filter': ['==', 'extrude', 'true'],
-              'type': 'fill-extrusion',
-              'minzoom': 15,
-              'paint': {
-                'fill-extrusion-color': '#b190db',
-                'fill-extrusion-height': {
-                  'type': 'identity',
-                  'property': 'height'
-                },
-                'fill-extrusion-base': {
-                  'type': 'identity',
-                  'property': 'min_height'
-                },
-                'fill-extrusion-opacity': .6
-              }
-            });  
-        });
 
+        //Add Popup
+        const tilesets = [
+            'fire-hazard-zones',
+            'topo-40',
+            'sd-county-lamesa-zoning',
+            'sb9',
+            'coastal-limitations',
+            'fire-protection-districts',
+            'sd-powerlines',
+            'sdcountyjurisdictions',
+            'city-sandiego-zoning',
+            'chulavistazoning',
+            'citysandiego'
+        ]
+       
+        map.current.on('dblclick', function (e) {
+            
+            const features = map.current.queryRenderedFeatures(e.point);
+            const displayProperties = ['id','layer'];
+             
+            const displayFeatures = features.map((feat) => {
+              const displayFeat = {};
+        
+              displayProperties.forEach((prop) => {
+                displayFeat[prop] = feat[prop];
+              });
+        
+              return displayFeat;
+            })
+            .filter((feat, index, self) => {
+              //Filter duplicated tilesets
+              return index === self.findIndex((t) => t.layer.id === feat.layer.id);
+            });
+        
+            //Add poup with filter tilesets
+            const coordinates = e.lngLat;
+            const description = displayFeatures.map((feat) => feat.layer.id).filter((id) => tilesets.includes(id)).join('<br>');
+
+            new mapboxgl.Popup()
+              .setLngLat(coordinates)
+              .setHTML(`<strong>Tilesets Affecting:</strong><br>${description}`)
+              .addTo(map.current);
+          });
+
+        
     });
 
     //Display layers.
@@ -67,76 +94,15 @@ const Map = ({location}) => {
       }
     }
 
+
     return(
-        
             <Layout>
-                
                 <div className="h-screen w-screen"  ref={mapContainer}></div>
                 
-                <div id="menu" className="absolute top-0 bg-white">
-                    <label>
-                      <input type="checkbox" name="trees_sd" defaultChecked={true}  onChange={(e) => setLayerVisibility('trees-sd', e.target.checked)}/>
-                      trees-sd
-                    </label>
-                    <br />
-                    <label>
-                      <input type="checkbox" name="fire_hazard_zones" defaultChecked={true}   onChange={(e) =>setLayerVisibility('fire-hazard-zones', e.target.checked)}/>
-                      fire-hazard-zones
-                    </label>
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="topo_40" defaultChecked={true}  onChange={(e) =>setLayerVisibility('topo-40', e.target.checked)}/>
-                      topo-40
-                    </label>
-                    
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="sd_county_lamesa_zoning" defaultChecked={true}  onChange={(e) =>setLayerVisibility('sd-county-lamesa-zoning', e.target.checked)}/>
-                      sd-county-lamesa-zoning
-                    </label>
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="sb9" defaultChecked={true}  onChange={(e) =>setLayerVisibility('sb9', e.target.checked)}/>
-                      sb9
-                    </label>
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="coastal_limitations" defaultChecked={true}  onChange={(e) =>setLayerVisibility('coastal-limitations', e.target.checked)}/>
-                      coastal-limitations
-                    </label>
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="fire_protection_districts" defaultChecked={true}  onChange={(e) =>setLayerVisibility('fire-protection-districts', e.target.checked)}/>
-                      fire-protection-districts
-                    </label>
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="sd_powerlines" defaultChecked={true}  onChange={(e) =>setLayerVisibility('sd-powerlines', e.target.checked)}/>
-                      sd-powerlines
-                    </label>
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="sdcountyjurisdictions" defaultChecked={true}  onChange={(e) =>setLayerVisibility('sdcountyjurisdictions', e.target.checked)}/>
-                      sdcountyjurisdictions
-                    </label>
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="city_sandiego_zoning" defaultChecked={true}  onChange={(e) =>setLayerVisibility('city-sandiego-zoning', e.target.checked)}/>
-                      city-sandiego-zoning
-                    </label>
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="chulavistazoning" defaultChecked={true}  onChange={(e) =>setLayerVisibility('chulavistazoning', e.target.checked)}/>
-                      chulavistazoning
-                    </label>
-                    <br/>
-                    <label>
-                      <input type="checkbox" name="citysandiego" defaultChecked={true}  onChange={(e) =>setLayerVisibility('citysandiego', e.target.checked)}/>
-                      citysandiego
-                    </label>
-                </div>
+                <TilesetMenu tilesetVisibility={setLayerVisibility}/>
+                
+                <SatelliteMenu satelliteVisibility={setLayerVisibility}/>
             </Layout>
-       
     );
 }
 
