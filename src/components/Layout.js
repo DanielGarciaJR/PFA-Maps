@@ -1,13 +1,15 @@
 import Head from "next/head";
 
 const Layout = ({children}) => {
+    
     return(
         <>
             <Head>
-                <title>PFA</title>
+                <title>
+                    PFA
+                </title>
             </Head>
 
-            
             {children}
         </>
     );
