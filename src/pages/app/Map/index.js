@@ -1,12 +1,12 @@
-
 import {useState,useEffect,useRef} from 'react';
 import Layout from '@/components/Layout';
 import mapboxgl from 'mapbox-gl';
-import mapbox from '../constants/mapbox';
+import mapbox from '../../../constants/mapbox';
 import TilesetMenu from '@/components/TilesetMenu';
 import SatelliteMenu from '@/components/SatelliteMenu';
-import tilesets from '../constants/tilesets';
+import tilesets from '../../../constants/tilesets';
 import Modal from '@/components/Modal';
+import TilesetTable from '@/components/TilesetTable';
 
 //Mapbox token
 mapboxgl.accessToken = mapbox.token;
@@ -42,17 +42,18 @@ const Map = ({location}) => {
         //Add zoom control
         map.current.on('load', () => { map.current.addControl(new mapboxgl.NavigationControl()); });
 
+
         //Modal logic 
         map.current.on('dblclick', function (e) {
             setShowModal(true); 
           
-            const features = map.current.queryRenderedFeatures(e.point);
-            const displayProperties = ['id','layer'];
+            const tilesetsOnMap = map.current.queryRenderedFeatures(e.point);
+            const tilesetProperties = ['id','layer','properties'];
              
-            const displayFeatures = features.map((feat) => {
+            const displayFeatures = tilesetsOnMap.map((feat) => {
               const displayFeat = {};
         
-              displayProperties.forEach((prop) => {
+              tilesetProperties.forEach((prop) => {
                 displayFeat[prop] = feat[prop];
               });
         
@@ -62,11 +63,18 @@ const Map = ({location}) => {
               //Filter duplicated tilesets
               return index === self.findIndex((t) => t.layer.id === feat.layer.id);
             });
-        
+
             //Get affected tilesets
-            const description = displayFeatures.map((feat) => feat.layer.id).filter((id) => tilesets.content.includes(id))
+            const description = displayFeatures.map((feat) => {
+              const id = feat.id;
+              const name = feat.layer.id;
+              const properties = Object.entries(feat.properties);
+
+              return {id,name,properties};
+            })
+            .filter((feat) => { return tilesets.content.includes(feat.name)});
             setTileAffecting(description);
-        })
+        });
     });
 
     //Display layers.
@@ -87,10 +95,18 @@ const Map = ({location}) => {
                 {showModal && 
                   <Modal closeModal={setShowModal}>
                       <div className="p-32 mt-[-70px] text-center">
+                        
                         <p className="font-bold text-xl">Tilesets affecting</p>
                       
-                        {tileAffecting.length === 0 ? <p className='text-lg text-gray-500'>No tilesets affecting</p> : tileAffecting.map((el,index) => <h3 className="text-lg text-gray-500" key={index}>{el}</h3>)}
-                    </div>
+                        <div className="p-[5px] text-center flex gap-4">
+                          {tileAffecting.length === 0 ? ( <p className="text-lg text-gray-500">No tilesets affecting</p>) : ( tileAffecting.map((el, index) => (
+                              <div key={index}>
+                                <TilesetTable tileset={el} />
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
                   </Modal>
                 }
             </Layout>

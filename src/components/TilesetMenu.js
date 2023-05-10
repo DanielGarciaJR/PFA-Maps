@@ -1,7 +1,7 @@
 import {useState,useRef, Fragment} from 'react';
 import { FaBuffer} from 'react-icons/fa';
 import { HiX } from "react-icons/hi";
-import tilesets from '@/pages/constants/tilesets';
+import tilesets from '@/constants/tilesets';
 
 const TilesetMenu = ({tilesetVisibility}) => {
 

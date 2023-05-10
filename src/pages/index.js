@@ -3,9 +3,9 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import Layout from '@/components/Layout';
 import Image from 'next/image';
-import mapbox from './constants/mapbox';
+import mapbox from '../constants/mapbox';
 import Map from './app/Map';
-import mapboxUrl from './constants/mapboxUrl';
+import mapboxUrl from '../constants/mapboxUrl';
 import dynamic from 'next/dynamic';
 
 const AddressAutofill = dynamic(
