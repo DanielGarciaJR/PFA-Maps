@@ -1,7 +1,6 @@
 import {useState,useEffect,useRef} from 'react';
 import Layout from '@/components/Layout';
 import mapboxgl from 'mapbox-gl';
-import mapbox from '../../../constants/mapbox';
 import TilesetMenu from '@/components/TilesetMenu';
 import SatelliteMenu from '@/components/SatelliteMenu';
 import tilesets from '../../../constants/tilesets';
@@ -9,7 +8,7 @@ import Modal from '@/components/Modal';
 import TilesetTable from '@/components/TilesetTable';
 
 //Mapbox token
-mapboxgl.accessToken = mapbox.token;
+mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
 
 const Map = ({location}) => {
@@ -74,6 +73,7 @@ const Map = ({location}) => {
             })
             .filter((feat) => { return tilesets.content.includes(feat.name)});
             setTileAffecting(description);
+            console.log(description);
         });
     });
 

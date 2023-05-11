@@ -3,10 +3,9 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import Layout from '@/components/Layout';
 import Image from 'next/image';
-import mapbox from '../constants/mapbox';
 import Map from './app/Map';
-import mapboxUrl from '../constants/mapboxUrl';
 import dynamic from 'next/dynamic';
+
 
 const AddressAutofill = dynamic(
   () => import('@mapbox/search-js-react').then((module) => module.AddressAutofill),
@@ -17,7 +16,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 
 export default function Home() {
-
+  
   //state
   const [location, setLocation] = useState('');
   const [coordinates, setCoordinates] = useState({ lng : null, lat : null});
@@ -33,7 +32,7 @@ export default function Home() {
     e.preventDefault();
   
     try{
-      const res = await fetch(`${mapboxUrl.baseUrl}mapbox.places/${location}.json?access_token=${mapbox.token}`);
+      const res = await fetch(`${process.env.GEOCODING_URL}mapbox.places/${location}.json?access_token=${process.env.MAPBOX_TOKEN}`);
       const data = await res.json();
 
       setCoordinates({
@@ -65,7 +64,7 @@ export default function Home() {
 
                 <form onSubmit={handleSubmit}>
                
-                  <AddressAutofill accessToken={mapbox.token}> 
+                  <AddressAutofill accessToken={process.env.MAPBOX_TOKEN}> 
                     <input
                       name='adress'
                       className='mt-12 w-96 h-11 rounded-full border-2 border-slate-300 mr-5 pl-4 mb-[16%]' 
@@ -87,7 +86,6 @@ export default function Home() {
                 </form>
                 </div>
             ): <Map location={coordinates}></Map>}
-            
       </Layout>
     </>    
   )
