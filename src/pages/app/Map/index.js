@@ -73,7 +73,6 @@ const Map = ({location}) => {
             })
             .filter((feat) => { return tilesets.content.includes(feat.name)});
             setTileAffecting(description);
-            console.log(description);
         });
     });
 
