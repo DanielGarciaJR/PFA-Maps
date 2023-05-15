@@ -1,18 +1,16 @@
-import { Inter } from 'next/font/google'
-import { useState } from "react";
+import { useState} from "react";
 import { FaSearch } from "react-icons/fa";
 import Layout from '@/components/Layout';
 import Image from 'next/image';
 import Map from './app/Map';
 import dynamic from 'next/dynamic';
+import ErrorMessage from "@/components/ErrorMessage";
 
 
 const AddressAutofill = dynamic(
   () => import('@mapbox/search-js-react').then((module) => module.AddressAutofill),
   { ssr: false }
 );
-
-const inter = Inter({ subsets: ['latin'] })
 
 
 export default function Home() {
@@ -21,6 +19,7 @@ export default function Home() {
   const [location, setLocation] = useState('');
   const [coordinates, setCoordinates] = useState({ lng : null, lat : null});
   const [showMap ,setShowMap] = useState(false);
+  const [showError, setShowError] = useState(false); 
 
   //functions
   const handleChangue = (e) => {
@@ -30,49 +29,57 @@ export default function Home() {
 
   const handleSubmit =  async(e) => {
     e.preventDefault();
+    
+    if(!location){
+      setShowError(true);
+    }else{
+      try{
+        const bbox = '-124.409619,32.534156,-114.131211,42.009518';
+        const res = await fetch(`${process.env.GEOCODING_URL}mapbox.places/${location}.json?access_token=${process.env.MAPBOX_TOKEN}&country=us&bbox=${bbox}`);
+        const data = await res.json();
+    
+        setCoordinates({
+            lng: data.features[0].center[0],
+            lat: data.features[0].center[1]
+        });
   
-    try{
-      const res = await fetch(`${process.env.GEOCODING_URL}mapbox.places/${location}.json?access_token=${process.env.MAPBOX_TOKEN}`);
-      const data = await res.json();
-
-      setCoordinates({
-          lng: data.features[0].center[0],
-          lat: data.features[0].center[1]
-      });
-
-      setShowMap(true);
-
-    }catch(error){
-      console.log(error);
+        setShowMap(true);
+  
+      }catch(error){
+        console.log(error);
+      }
     }
   }
+
 
   return ( 
     <>
        <Layout>
-        
+      
        {!showMap ? (
-              <div className="flex flex-col justify-center items-center mt-[14%] pt-[3%] ml-[25%] mr-[25%] bg-white rounded-lg "> 
+            <div  className="flex flex-col justify-center items-center mt-[14%] pt-[3%] ml-[25%] mr-[25%] pb-[4%] bg-white rounded-lg "> 
                
                 <Image 
+                  className="w-auto h-auto"
                   priority 
                   src="/images/mk_logo.png" 
                   alt="multitaskrLogo"  
-                  width={480} 
-                  height={480}
+                  width="480" 
+                  height="480"
                 />
 
                 <form onSubmit={handleSubmit}>
-               
-                  <AddressAutofill accessToken={process.env.MAPBOX_TOKEN}> 
+                 
+                 <AddressAutofill accessToken={process.env.MAPBOX_TOKEN} options={{types: ['country', 'region', 'place', 'postcode', 'locality', 'neighborhood']}}>
                     <input
                       name='adress'
-                      className='mt-12 w-96 h-11 rounded-full border-2 border-slate-300 mr-5 pl-4 mb-[16%]' 
+                      className='mt-12 w-96 h-11 rounded-full border-2 border-slate-300 mr-5 pl-4' 
                       type="text" 
-                      autoComplete="street-address"
-                      placeholder="Search an address here" 
+                      autoComplete="address-line1"
+                      placeholder="214 Landis Ave, Chula Vista example" 
                       value={location} 
                       onChange={handleChangue}
+                      onFocus={() => setShowError(false)}
                     >
                     </input>
                   </AddressAutofill>
@@ -84,8 +91,18 @@ export default function Home() {
                   </button>
 
                 </form>
-                </div>
-            ): <Map location={coordinates}></Map>}
+                {showError && 
+                   <ErrorMessage>
+                      <div className=" mt-1 p-1 text-[#dc3545] font-medium ml-[-18%]">
+                        <h2>Please, write something in the search bar.</h2>  
+                      </div>  
+                    </ErrorMessage>
+                }
+            </div>
+       ): <Map 
+              location={coordinates}>
+          </Map>}
+
       </Layout>
     </>    
   )

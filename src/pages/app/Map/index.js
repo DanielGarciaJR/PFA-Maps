@@ -13,6 +13,7 @@ mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
 const Map = ({location}) => {
 
+   
     //state
     const [showModal,setShowModal] = useState(false);
     const [tileAffecting,setTileAffecting] = useState(null); 
@@ -39,13 +40,13 @@ const Map = ({location}) => {
         //Add marker
         marker.current = new mapboxgl.Marker().setLngLat([location.lng, location.lat]).addTo(map.current);
         //Add zoom control
-        map.current.on('load', () => { map.current.addControl(new mapboxgl.NavigationControl()); });
+        map.current.on('load', (e) => { map.current.addControl(new mapboxgl.NavigationControl());});
 
 
         //Modal logic 
         map.current.on('dblclick', function (e) {
             setShowModal(true); 
-          
+    
             const tilesetsOnMap = map.current.queryRenderedFeatures(e.point);
             const tilesetProperties = ['id','layer','properties'];
              
