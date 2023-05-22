@@ -3,7 +3,8 @@ import { FaBuffer} from 'react-icons/fa';
 import { HiX } from "react-icons/hi";
 import tilesets from '@/constants/tilesets';
 
-const TilesetMenu = ({tilesetVisibility}) => {
+/*Tilese Menu Container to hide tilesets*/
+const TilesetMenu = ({tilesetVisibility }) => {
 
     //state
     const [tilesetMenu,setTilesetMenu] = useState(true);
@@ -45,8 +46,8 @@ const TilesetMenu = ({tilesetVisibility}) => {
 
                 {tilesets.content.map((tileName,index) => (
                     <Fragment key={index}>
-                        <label className=' p-1 hover:rounded-lg hover:bg-gray-100 '>
-                            <input className='mr-3 mt-6' type="checkbox" onChange={(e) =>tilesetVisibility(tileName, e.target.checked)}/>
+                        <label className=' p-1 hover:rounded-lg hover:bg-gray-100'>
+                            <input className='mr-3 mt-6' defaultChecked='true' type="checkbox" onChange={(e) => tilesetVisibility(tileName, e.target.checked)}/>
                             {tileName}
                         </label>
                         <br/>

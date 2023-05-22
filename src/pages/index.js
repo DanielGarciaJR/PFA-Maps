@@ -12,21 +12,22 @@ const AddressAutofill = dynamic(
   { ssr: false }
 );
 
-
 export default function Home() {
   
   //state
-  const [location, setLocation] = useState('');
+  const [locationInput, setLocationInput] = useState('');
+  const [locationMap,setLocationMap] = useState('');
   const [coordinates, setCoordinates] = useState({ lng : null, lat : null});
   const [showMap ,setShowMap] = useState(false);
   const [showError, setShowError] = useState(false); 
 
-  //functions
+  //get input value
   const handleChangue = (e) => {
     e.preventDefault();
-    setLocation(e.target.value);
+    setLocationInput(e.target.value);
   }
 
+  //do get for request a location
   const handleSubmit =  async(e) => {
     e.preventDefault();
     
@@ -35,14 +36,15 @@ export default function Home() {
     }else{
       try{
         const bbox = '-124.409619,32.534156,-114.131211,42.009518';
-        const res = await fetch(`${process.env.GEOCODING_URL}mapbox.places/${location}.json?access_token=${process.env.MAPBOX_TOKEN}&country=us&bbox=${bbox}`);
+        const res = await fetch(`${process.env.GEOCODING_URL}mapbox.places/${locationInput}.json?access_token=${process.env.MAPBOX_TOKEN}&country=us&bbox=${bbox}`);
         const data = await res.json();
-    
+
         setCoordinates({
             lng: data.features[0].center[0],
             lat: data.features[0].center[1]
         });
-  
+
+        setLocationMap(data.features[0].place_name);
         setShowMap(true);
   
       }catch(error){
@@ -50,14 +52,13 @@ export default function Home() {
       }
     }
   }
-
-
+  
   return ( 
     <>
        <Layout>
       
        {!showMap ? (
-            <div  className="flex flex-col justify-center items-center mt-[14%] pt-[3%] ml-[25%] mr-[25%] pb-[4%] bg-white rounded-lg "> 
+            <div  className="flex flex-col justify-center items-center mt-[14%] pt-[3%] ml-[25%] mr-[25%] pb-[4%] bg-white rounded-lg"> 
                
                 <Image 
                   className="w-auto h-auto"
@@ -77,7 +78,7 @@ export default function Home() {
                       type="text" 
                       autoComplete="address-line1"
                       placeholder="214 Landis Ave, Chula Vista example" 
-                      value={location} 
+                      value={locationInput} 
                       onChange={handleChangue}
                       onFocus={() => setShowError(false)}
                     >
@@ -100,7 +101,7 @@ export default function Home() {
                 }
             </div>
        ): <Map 
-              location={coordinates}>
+              location={coordinates} address={locationMap} handleChangue={handleChangue} handleSubmit={handleSubmit}>
           </Map>}
 
       </Layout>

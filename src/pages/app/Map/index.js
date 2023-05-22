@@ -4,79 +4,119 @@ import mapboxgl from 'mapbox-gl';
 import TilesetMenu from '@/components/TilesetMenu';
 import SatelliteMenu from '@/components/SatelliteMenu';
 import tilesets from '../../../constants/tilesets';
-import Modal from '@/components/Modal';
-import TilesetTable from '@/components/TilesetTable';
+import Sidebar from '@/components/Sidebar';
+import LocationLabel from '@/components/LocationLabel';
+import ButtonPitch from '@/components/ButtonPitch';
+
+/*import TilesetTable from '@/components/TilesetContainer';*/
 
 //Mapbox token
 mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
 
-const Map = ({location}) => {
+const Map = ({location, address,handleChangue,handleSubmit}) => {
 
-   
     //state
-    const [showModal,setShowModal] = useState(false);
-    const [tileAffecting,setTileAffecting] = useState(null); 
+    /*const [showModal,setShowModal] = useState(false);*/
+    const [tileAffecting,setTileAffecting] = useState([]); 
+    const [pitch,setPitch] = useState(false);
 
     //Map's containers
     const mapContainer = useRef(null);
     const map = useRef(null);
     const marker = useRef(null);
 
-    //use effect to diplay map.
+    //Use Effect for Map rendering, It only renders 1 time.
     useEffect(() => {
-        if(map.current) return;
+      mapContainer.current.innerHTML = '';
+
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/elgerardo/clh9inqj500c601pod3cg4lh7',
+        center: [location.lng, location.lat],
+        zoom: 20,
+        pitch: 0
+      });
+
+      marker.current = new mapboxgl.Marker().setLngLat([location.lng, location.lat]).addTo(map.current);
+
+      map.current.on('load', () => {
+        map.current.addControl(new mapboxgl.NavigationControl());
+      });
+
+      map.current.on('sourcedata', () => {
+        getAffectedTilesets(location);   
+      });
+
+
+      return () => {
+        if (map.current) {
+          map.current.remove();
+        }
+      };
+    }, []);
+
+    //UseEffect for location, this useEffect only execute when you search another location in map window.
+    useEffect(() => {
+      if (map.current) {
+        if (location.lng && location.lat) {
+          marker.current.setLngLat([location.lng, location.lat]);
+          map.current.flyTo({ center: [location.lng, location.lat]});
+          
+          map.current.on('sourcedata', () => {
+            getAffectedTilesets(location);   
+          });
+        }
+      }
+    }, [location]);
+
+
+    //UseEffect for pitch, to changue the pitch.
+    useEffect(() => {
+      if (pitch) {
+        map.current.setPitch(60);
+      } else {
+        map.current.setPitch(0);
+      }
+    }, [pitch]);
+
+    //Funtion to get the tilesets in an array
+    const getAffectedTilesets = (location) => {
+      let point = map.current.project(location);
+      const tilesetsOnMap = map.current.queryRenderedFeatures(point);
+      const tilesetProperties = ['id', 'layer', 'properties'];
     
-        mapContainer.current.innerHTML = '';
+      const displayFeatures = tilesetsOnMap
+        .map((feat) => {
+          const displayFeat = {};
     
-        map.current = new mapboxgl.Map({
-            container: mapContainer.current,
-            style: 'mapbox://styles/elgerardo/clh9inqj500c601pod3cg4lh7',
-            center: [location.lng,location.lat],
-            zoom: 20,
-            pitch: 40
+          tilesetProperties.forEach((prop) => {
+            displayFeat[prop] = feat[prop];
+          });
+    
+          return displayFeat;
+        })
+        .filter((feat, index, self) => {
+          // Filter duplicate tilesets
+          return index === self.findIndex((t) => t.layer.id === feat.layer.id);
         });
-
-        //Add marker
-        marker.current = new mapboxgl.Marker().setLngLat([location.lng, location.lat]).addTo(map.current);
-        //Add zoom control
-        map.current.on('load', (e) => { map.current.addControl(new mapboxgl.NavigationControl());});
-
-
-        //Modal logic 
-        map.current.on('dblclick', function (e) {
-            setShowModal(true); 
     
-            const tilesetsOnMap = map.current.queryRenderedFeatures(e.point);
-            const tilesetProperties = ['id','layer','properties'];
-             
-            const displayFeatures = tilesetsOnMap.map((feat) => {
-              const displayFeat = {};
-        
-              tilesetProperties.forEach((prop) => {
-                displayFeat[prop] = feat[prop];
-              });
-        
-              return displayFeat;
-            })
-            .filter((feat, index, self) => {
-              //Filter duplicated tilesets
-              return index === self.findIndex((t) => t.layer.id === feat.layer.id);
-            });
-
-            //Get affected tilesets
-            const description = displayFeatures.map((feat) => {
-              const id = feat.id;
-              const name = feat.layer.id;
-              const properties = Object.entries(feat.properties);
-
-              return {id,name,properties};
-            })
-            .filter((feat) => { return tilesets.content.includes(feat.name)});
-            setTileAffecting(description);
+      // do the object array with tilesets
+      const description = displayFeatures
+        .map((feat) => {
+          const id = feat.id;
+          const name = feat.layer.id;
+          const properties = Object.entries(feat.properties);
+    
+          return { id, name, properties };
+        })
+        .filter((feat) => {
+          return tilesets.content.includes(feat.name);
         });
-    });
-
+    
+      setTileAffecting(description);
+    };
+    
     //Display layers.
     function setLayerVisibility(layerName, isVisible) {
       const visibility = isVisible ? 'visible' : 'none';
@@ -85,30 +125,34 @@ const Map = ({location}) => {
       }
     }
 
-
     return(
             <Layout>
-                <div className="h-screen w-screen"  ref={mapContainer}></div>
-                <TilesetMenu tilesetVisibility={setLayerVisibility}/>
-                <SatelliteMenu satelliteVisibility={setLayerVisibility}/>
+                {/*Map container*/}
+                <div 
+                  className="h-screen w-[75%]"  
+                  ref={mapContainer}>
+                </div>
                 
-                {showModal && 
-                  <Modal closeModal={setShowModal}>
-                      <div className="p-32 mt-[-70px] text-center">
-                        
-                        <p className="font-bold text-xl">Tilesets affecting</p>
-                      
-                        <div className="p-[5px] text-center flex gap-4">
-                          {tileAffecting.length === 0 ? ( <p className="text-lg text-gray-500">No tilesets affecting</p>) : ( tileAffecting.map((el, index) => (
-                              <div key={index}>
-                                <TilesetTable tileset={el} />
-                              </div>
-                            ))
-                          )}
-                        </div>
-                      </div>
-                  </Modal>
-                }
+                {/*Tileset Menu*/}
+                <TilesetMenu tilesetVisibility={setLayerVisibility}/>
+                
+                {/*Sidebar Information*/}
+                <Sidebar 
+                  form={handleChangue} 
+                  formSubmit={handleSubmit} 
+                  tilesets={tileAffecting}>
+                </Sidebar>
+                
+                {/*Current Location*/}
+                <LocationLabel 
+                  currentAddress={address}>
+                </LocationLabel>
+
+                {/*Changue pitch*/}
+                <ButtonPitch pitch={pitch}  setPitch={setPitch}/>
+
+                {/*Change to satelite view*/}
+                <SatelliteMenu satelliteVisibility={setLayerVisibility}/>
             </Layout>
     );
 }
