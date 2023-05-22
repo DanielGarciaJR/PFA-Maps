@@ -21,7 +21,7 @@ const Sidebar = ({form,formSubmit,tilesets}) => {
                 <FaBuffer className="w-[30px] h-[30px] mb-[5%] "/>
                 <p 
                   className="text-[20px] text-center">
-                  Tileset's Information
+                  Tilesets Information
                 </p>
                 <p 
                   className="text-center text-gray-400/70">
