@@ -18,7 +18,7 @@ const ButtonPitch = ({pitch,setPitch}) => {
 
   return (
     <div 
-      className="absolute top-28 ml-[72.2%] rounded-lg bg-white p-2">
+      className="absolute top-28 ml-[72.2%] rounded-lg bg-white p-2 text-gray-500">
         <button 
           type='button' 
           onClick={handlePitch}>

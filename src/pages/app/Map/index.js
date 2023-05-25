@@ -32,7 +32,7 @@ const Map = ({location, address,handleChangue,handleSubmit}) => {
 
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/elgerardo/clh9inqj500c601pod3cg4lh7',
+        style: 'mapbox://styles/multitaskr/cli3pe0e700xd01podw5ufbfd',
         center: [location.lng, location.lat],
         zoom: 20,
         pitch: 0
@@ -70,7 +70,6 @@ const Map = ({location, address,handleChangue,handleSubmit}) => {
       }
     }, [location]);
 
-
     //UseEffect for pitch, to changue the pitch.
     useEffect(() => {
       if (pitch) {
@@ -80,7 +79,7 @@ const Map = ({location, address,handleChangue,handleSubmit}) => {
       }
     }, [pitch]);
 
-    //Funtion to get the tilesets in an array
+    //Function to get the tilesets in an array
     const getAffectedTilesets = (location) => {
       let point = map.current.project(location);
       const tilesetsOnMap = map.current.queryRenderedFeatures(point);

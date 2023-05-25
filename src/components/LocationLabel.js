@@ -5,7 +5,7 @@ const LocationLabel = ({currentAddress}) => {
     return(
         <div className="absolute top-[90%] ml-[20%] w-[40%] bg-white p-2 rounded-full drop-shadow-md">
             <div className=" text-center ">
-                <BiCurrentLocation className="w-5 h-5 ml-2 absolute mt-[2px]"/>
+                <BiCurrentLocation className="w-5 h-5 ml-2 absolute mt-[2px] text-gray-500"/>
                 <p 
                     className="text-gray-500">
                     {currentAddress}

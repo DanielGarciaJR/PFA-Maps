@@ -31,7 +31,7 @@ export default function Home() {
   const handleSubmit =  async(e) => {
     e.preventDefault();
     
-    if(!location){
+    if(!locationInput){
       setShowError(true);
     }else{
       try{
@@ -94,7 +94,7 @@ export default function Home() {
                 </form>
                 {showError && 
                    <ErrorMessage>
-                      <div className=" mt-1 p-1 text-[#dc3545] font-medium ml-[-18%]">
+                      <div className=" mt-1 p-1 text-[#dc3545] font-medium ml-[-13%]">
                         <h2>Please, write something in the search bar.</h2>  
                       </div>  
                     </ErrorMessage>
