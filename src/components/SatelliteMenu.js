@@ -8,7 +8,7 @@ const SatelliteMenu = ({satelliteVisibility}) => {
                     className='mr-3 bg-white' 
                     type="checkbox" 
                     name="satelitalView" 
-                    onChange={(e) => satelliteVisibility('mapbox-satellite',e.target.checked)} 
+                    onChange={(e) => satelliteVisibility('Satellite',e.target.checked)} 
                 />
                 Satelite
             </label>

@@ -9,6 +9,7 @@ const Layout = ({children}) => {
                 <title>
                     PFA
                 </title>
+                
             </Head>
 
             {children}
