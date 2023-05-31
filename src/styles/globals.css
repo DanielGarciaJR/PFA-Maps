@@ -25,5 +25,16 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
     }
+
+    
+    
+    ::-webkit-scrollbar {
+      background-color: rgb(240, 238, 246);
+      width: 6px;
+      height: 5px;
+    }
   
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(141, 84, 216, 0.457);
+    }
 }

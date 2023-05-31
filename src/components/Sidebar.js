@@ -6,7 +6,7 @@ import TilesetContainer from './TilesetContainer';
 const Sidebar = ({form,formSubmit,tilesets}) => {
     
     return (
-      <div className="bg-white w-[25%] h-screen  absolute top-0 right-0 drop-shadow-md overflow-y-scroll no-scrollbar">
+      <div className="bg-white w-[25%] h-screen  absolute top-0 right-0 drop-shadow-md overflow-y-scroll ">
         <div>
             {/*div for search bar form*/}
             <div>

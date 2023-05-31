@@ -15,7 +15,7 @@ const LocationForm = ({formValue,formSubmitData}) => {
                 <input
                     type="text" 
                     placeholder="Search location"
-                    className='mt-5 ml-3 mr-3 p-2 w-[80%]  rounded-full border-2 border-slate-300'
+                    className='mt-5 ml-3 mr-3 p-2 w-[80%]  rounded-full border-2 border-slate-300 text-gray-500'
                     autoComplete="address-line1"
                     onChange={formValue}>
                 </input>
