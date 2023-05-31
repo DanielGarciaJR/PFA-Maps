@@ -19,12 +19,12 @@ const TilesetMenu = ({tilesetVisibility }) => {
 
         if(tilesetMenu){
             containerMenu.current.classList.remove('hidden');
-            openButton.current.classList.remove('shadow-md');
+            openButton.current.classList.remove('drop-shadow-lg');
             openButton.current.classList.remove('border-[1px]');
             
         }else{
             containerMenu.current.classList.add('hidden');
-            openButton.current.classList.add('shadow-md');
+            openButton.current.classList.add('drop-shadow-lg');
             openButton.current.classList.add('border-[1px]');
         
         }
@@ -33,7 +33,7 @@ const TilesetMenu = ({tilesetVisibility }) => {
     return(
         <>
             {/*Div tileset button*/}
-            <div  ref={openButton} className="absolute top-2 z-10 ml-3 bg-white p-2 rounded-lg border-[1px] shadow-m">
+            <div  ref={openButton} className="absolute top-2 z-10 ml-3 bg-white text-gray-500 p-2 rounded-lg border-[1px] drop-shadow-lg">
                 <button onClick={showMenu}>
                     {tilesetMenu ? <FaBuffer className="w-6"/> : <HiX className='w-6'/>}
                 </button>
@@ -46,7 +46,7 @@ const TilesetMenu = ({tilesetVisibility }) => {
 
                 {tilesets.content.map((tileName,index) => (
                     <Fragment key={index}>
-                        <label className=' p-1 hover:rounded-lg hover:bg-gray-100'>
+                        <label className=' p-1 hover:rounded-lg hover:bg-gray-100 text-gray-500'>
                             <input className='mr-3 mt-6' defaultChecked='true' type="checkbox" onChange={(e) => tilesetVisibility(tileName, e.target.checked)}/>
                             {tileName}
                         </label>
