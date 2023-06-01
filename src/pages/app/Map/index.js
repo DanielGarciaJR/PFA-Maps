@@ -48,7 +48,6 @@ const Map = ({location, address,handleChangue,handleSubmit}) => {
         getAffectedTilesets(location);   
       });
 
-
       return () => {
         if (map.current) {
           map.current.remove();
