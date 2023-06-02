@@ -108,7 +108,7 @@ export default function Home() {
                 }
             </div>
        ): <Map 
-              location={coordinates} address={locationMap} handleChangue={handleChangue} handleSubmit={handleSubmit}>
+              location={coordinates} address={locationMap} handleChangue={handleChangue} handleSubmit={handleSubmit} setHoverCoordinates={setCoordinates} setHoverCurrentLocation={setLocationMap}>
           </Map>}
 
       </Layout>

@@ -8,16 +8,13 @@ import Sidebar from '@/components/Sidebar';
 import LocationLabel from '@/components/LocationLabel';
 import ButtonPitch from '@/components/ButtonPitch';
 
-/*import TilesetTable from '@/components/TilesetContainer';*/
-
 //Mapbox token
 mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
 
-const Map = ({location, address,handleChangue,handleSubmit}) => {
+const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,setHoverCurrentLocation}) => {
 
     //state
-    /*const [showModal,setShowModal] = useState(false);*/
     const [tileAffecting,setTileAffecting] = useState([]); 
     const [pitch,setPitch] = useState(false);
 
@@ -29,6 +26,8 @@ const Map = ({location, address,handleChangue,handleSubmit}) => {
     //Use Effect for Map rendering, It only renders 1 time.
     useEffect(() => {
       mapContainer.current.innerHTML = '';
+      var hoveredStateId = null;
+
 
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
@@ -40,13 +39,99 @@ const Map = ({location, address,handleChangue,handleSubmit}) => {
 
       marker.current = new mapboxgl.Marker().setLngLat([location.lng, location.lat]).addTo(map.current);
 
+      //load map
       map.current.on('load', () => {
+        //load zoom controls
         map.current.addControl(new mapboxgl.NavigationControl());
+
+        //Add citysandiego source to know parcel limits.
+        map.current.addSource('city of san diego parcels',{
+          type: 'vector',
+          url: 'mapbox://multitaskr.citysandiego'
+        });
+
+        //Adding tileset layers of the source to hover effect
+        map.current.addLayer({
+          'id': 'parcels-limit-fill',
+          'type': 'fill',
+          'source': 'city of san diego parcels','source-layer': 'citysandiego',
+          'layout': {},
+          'paint': {
+            'fill-color': '#DFCAEC',
+            'fill-opacity': [ 'case',['boolean', ['feature-state', 'hover'], false],1,0]
+          }
+        });
+
+
+        map.current.addLayer({
+          id: 'parcels-limit',
+          type: 'line',
+          source: 'city of san diego parcels', 'source-layer': 'citysandiego',
+          'paint': {
+            'line-color': '#740595',
+            'line-width': 3,
+            'line-dasharray': [2, 2]
+            }
+        });
+
+         // Establecer el orden de apilamiento de las capas
+         map.current.moveLayer('parcels-limit-fill', 'building-extrusion');
       });
 
+       //mouse move effect to hover the property
+       map.current.on('mousemove', 'parcels-limit-fill', function (e) {
+        if (e.features.length > 0) {
+          if (hoveredStateId) { 
+            map.current.setFeatureState(
+              { 
+                source: 'city of san diego parcels', 
+                sourceLayer: 'citysandiego', 
+                id: hoveredStateId 
+              },
+              { 
+                hover: false
+              }
+            );
+          }
+          hoveredStateId = e.features[0].id;
+          map.current.setFeatureState({ 
+            source: 'city of san diego parcels', 
+            sourceLayer: 'citysandiego', 
+            id: hoveredStateId 
+          },
+          { 
+            hover: true 
+          });
+        }
+      });
+
+      //remove color hover
+      map.current.on('mouseleave', 'parcels-limit-fill', function () {
+        if (hoveredStateId) {
+            map.current.setFeatureState({ 
+              source: 'city of san diego parcels', 
+              sourceLayer: 'citysandiego', 
+              id: hoveredStateId 
+              },
+              { 
+                hover: false 
+              }
+            );
+        }
+        hoveredStateId = null;
+      });
+
+      //get tilesets affecting the area
       map.current.on('sourcedata', () => {
         getAffectedTilesets(location);   
       });
+
+      //change location by hover & getting tilesets.
+      map.current.on('click', (e) => {
+        getLocationHoverClick(e.lngLat.lng,e.lngLat.lat);
+        getTilesetByClick(e.point);
+      });
+
 
       return () => {
         if (map.current) {
@@ -122,6 +207,64 @@ const Map = ({location, address,handleChangue,handleSubmit}) => {
         map.current.setLayoutProperty(layerName, 'visibility', visibility);
       }
     }
+
+    //Function to get location by click.
+    const getLocationHoverClick = async (longitude,latitude) => {
+     
+      try{
+        const bbox = '-124.409619,32.534156,-114.131211,42.009518';
+        const res = await fetch(`${process.env.GEOCODING_URL}mapbox.places/${longitude},${latitude}.json?access_token=${process.env.MAPBOX_TOKEN}&country=us&bbox=${bbox}`);
+        const data = await res.json();
+
+        setHoverCoordinates({
+          lng: data.features[0].center[0],
+          lat: data.features[0].center[1]
+        });
+
+        setHoverCurrentLocation(data.features[0].place_name);
+
+      }catch(error){
+        console.log(error);
+      }
+    }
+
+    //Function to get tilesets affecting by click.
+    const getTilesetByClick = (position) => {
+
+      const tilesetsOnMap = map.current.queryRenderedFeatures(position);
+      const tilesetProperties = ['id', 'layer', 'properties'];
+
+      const displayFeatures = tilesetsOnMap
+        .map((feat) => {
+          const displayFeat = {};
+    
+          tilesetProperties.forEach((prop) => {
+            displayFeat[prop] = feat[prop];
+          });
+    
+          return displayFeat;
+        })
+        .filter((feat, index, self) => {
+          // Filter duplicate tilesets
+          return index === self.findIndex((t) => t.layer.id === feat.layer.id);
+        });
+    
+      // do the object array with tilesets
+      const description = displayFeatures
+        .map((feat) => {
+          const id = feat.id;
+          const name = feat.layer.id;
+          const properties = Object.entries(feat.properties);
+    
+          return { id, name, properties };
+        })
+        .filter((feat) => {
+          return tilesets.content.includes(feat.name);
+        });
+    
+      setTileAffecting(description);
+    }
+
 
     return(
             <Layout>
