@@ -1,7 +1,7 @@
 export default  {
     content: [
         'Sewer Manhole',
-        'Drain Structure',
+        'Storm Water',
         'Drain Conveyance',
         'Water Main',
         'Sewer Main',

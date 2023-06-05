@@ -127,11 +127,28 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
       });
 
       //change location by hover & getting tilesets.
-      map.current.on('click', (e) => {
+      map.current.on('click','parcels-limit-fill', (e) => {
         getLocationHoverClick(e.lngLat.lng,e.lngLat.lat);
-        getTilesetByClick(e.point);
+        getAffectedTilesets(e.lngLat);
       });
 
+      map.current.on('click','Water Main', (e) => {
+        console.log('Water_main');
+        getAffectedTilesets(e.lngLat);
+      });
+
+      map.current.on('click','Sewer Main', (e) => {
+        console.log('Sewer_Main');
+        getAffectedTilesets(e.lngLat);
+      });
+
+      map.current.on('click','Drain Conveyance', (e) => {
+        console.log('Drain_Conveyance');
+        getAffectedTilesets(e.lngLat);
+      });
+
+
+      
 
       return () => {
         if (map.current) {
@@ -227,44 +244,6 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
         console.log(error);
       }
     }
-
-    //Function to get tilesets affecting by click.
-    const getTilesetByClick = (position) => {
-
-      const tilesetsOnMap = map.current.queryRenderedFeatures(position);
-      const tilesetProperties = ['id', 'layer', 'properties'];
-
-      const displayFeatures = tilesetsOnMap
-        .map((feat) => {
-          const displayFeat = {};
-    
-          tilesetProperties.forEach((prop) => {
-            displayFeat[prop] = feat[prop];
-          });
-    
-          return displayFeat;
-        })
-        .filter((feat, index, self) => {
-          // Filter duplicate tilesets
-          return index === self.findIndex((t) => t.layer.id === feat.layer.id);
-        });
-    
-      // do the object array with tilesets
-      const description = displayFeatures
-        .map((feat) => {
-          const id = feat.id;
-          const name = feat.layer.id;
-          const properties = Object.entries(feat.properties);
-    
-          return { id, name, properties };
-        })
-        .filter((feat) => {
-          return tilesets.content.includes(feat.name);
-        });
-    
-      setTileAffecting(description);
-    }
-
 
     return(
             <Layout>
