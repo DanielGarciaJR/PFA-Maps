@@ -132,23 +132,42 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
         getAffectedTilesets(e.lngLat);
       });
 
+      /*Changue pointer on Water Main*/
+      map.current.on('mousemove','Water Main', () => {
+        map.current.getCanvas().style.cursor = 'pointer';
+      })
+      map.current.on('mouseleave','Water Main', () => {
+        map.current.getCanvas().style.cursor = '';
+      })
+
       map.current.on('click','Water Main', (e) => {
-        console.log('Water_main');
         getAffectedTilesets(e.lngLat);
       });
+      
+      /*Change pointer on Sewer Main*/
+     map.current.on('mousemove','Sewer Main', () => {
+        map.current.getCanvas().style.cursor = 'pointer';
+      })
+      map.current.on('mouseleave','Sewer Main', () => {
+        map.current.getCanvas().style.cursor = '';
+      })
 
       map.current.on('click','Sewer Main', (e) => {
-        console.log('Sewer_Main');
         getAffectedTilesets(e.lngLat);
       });
 
+      /*Change pointer on Drain Conveyance*/
       map.current.on('click','Drain Conveyance', (e) => {
-        console.log('Drain_Conveyance');
         getAffectedTilesets(e.lngLat);
       });
 
-
-      
+     map.current.on('mousemove','Drain Conveyance', () => {
+        map.current.getCanvas().style.cursor = 'pointer';
+      })
+      map.current.on('mouseleave','Drain Conveyance', () => {
+        map.current.getCanvas().style.cursor = '';
+      })
+     
 
       return () => {
         if (map.current) {
@@ -224,7 +243,7 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
         map.current.setLayoutProperty(layerName, 'visibility', visibility);
       }
     }
-
+   
     //Function to get location by click.
     const getLocationHoverClick = async (longitude,latitude) => {
      
