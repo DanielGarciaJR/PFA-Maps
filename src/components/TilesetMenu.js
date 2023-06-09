@@ -49,8 +49,8 @@ const TilesetMenu = ({tilesetVisibility }) => {
                 {tilesets.content.map((tileName,index) => (
                     <Fragment key={index} >
                         <label className=' p-1 hover:rounded-lg hover:bg-gray-100 text-gray-500'>
-                            <input className='mr-3 mt-6' defaultChecked='true' type="checkbox" onChange={(e) => tilesetVisibility(tileName, e.target.checked)}/>
-                            {tileName}
+                            <input className='mr-3 mt-6' defaultChecked='true' type="checkbox" onChange={(e) => tilesetVisibility(tileName.id, e.target.checked)}/>
+                            {tileName.id}
                         </label>
                         <br/>
                     </Fragment>

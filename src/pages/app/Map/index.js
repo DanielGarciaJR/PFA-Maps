@@ -8,6 +8,7 @@ import Sidebar from '@/components/Sidebar';
 import LocationLabel from '@/components/LocationLabel';
 import ButtonPitch from '@/components/ButtonPitch';
 
+
 //Mapbox token
 mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
@@ -28,7 +29,6 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
       mapContainer.current.innerHTML = '';
       var hoveredStateId = null;
 
-
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: 'mapbox://styles/multitaskr/cli3pe0e700xd01podw5ufbfd',
@@ -41,45 +41,38 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
 
       //load map
       map.current.on('load', () => {
-        //load zoom controls
-        map.current.addControl(new mapboxgl.NavigationControl());
+          //load zoom controls
+          map.current.addControl(new mapboxgl.NavigationControl());
 
-        //Add citysandiego source to know parcel limits.
-        map.current.addSource('city of san diego parcels',{
-          type: 'vector',
-          url: 'mapbox://multitaskr.citysandiego'
-        });
-
-        //Adding tileset layers of the source to hover effect
-        map.current.addLayer({
-          'id': 'parcels-limit-fill',
-          'type': 'fill',
-          'source': 'city of san diego parcels','source-layer': 'citysandiego',
-          'layout': {},
-          'paint': {
-            'fill-color': '#DFCAEC',
-            'fill-opacity': [ 'case',['boolean', ['feature-state', 'hover'], false],1,0]
-          }
-        });
-
-
-        map.current.addLayer({
-          id: 'parcels-limit',
-          type: 'line',
-          source: 'city of san diego parcels', 'source-layer': 'citysandiego',
-          'paint': {
-            'line-color': '#740595',
-            'line-width': 3,
-            'line-dasharray': [2, 2]
+          //ADDING  MAPBOX SOURCES & LAYERS .
+          addParcelSource('city of san diego parcels','mapbox://multitaskr.citysandiego')
+          addParcelFill('parcels-limit-fill','fill','city of san diego parcels','#DFCAEC',[ 'case',['boolean', ['feature-state', 'hover'], false],1,0]);
+          addParcelLine('parcels-limit','line','city of san diego parcels','#740595',3,[2,2]);
+         
+          tilesets.content.map((data) => {
+            addSources(data.source,data.url);
+            
+            if(data.type == 'circle'){
+              addCircleLayer(data.id,data.type,data.source,data.properties.radius,data.properties.color,data.properties.strokeColor,data.properties.strokeWidth);
+            }else if(data.type == 'line'){
+              addLineLayer(data.id,data.type,data.source,data.properties.lineColor,data.properties.lineWidth);
+            }else if(data.type == 'fill'){
+              addFillLayer(data.id,data.type,data.source,data.properties.color, data.properties.opacity);
             }
-        });
+          });
 
-         // Establecer el orden de apilamiento de las capas
+         // layers order.
          map.current.moveLayer('parcels-limit-fill', 'building-extrusion');
+         map.current.moveLayer('Drain Conveyance', 'Storm Water');
+         map.current.moveLayer('Water Main', 'Drain Conveyance');
+         map.current.moveLayer('Sewer Main', 'Sewer Manhole');
+         map.current.moveLayer('Solid Report Conditional','building-extrusion');
+         map.current.moveLayer('Fire Hazard Severity Zones','building-extrusion');
+         map.current.moveLayer('Solid Report Required','building-extrusion');
       });
 
-       //mouse move effect to hover the property
-       map.current.on('mousemove', 'parcels-limit-fill', function (e) {
+      //mouse move effect to hover the property
+      map.current.on('mousemove', 'parcels-limit-fill', function (e) {
         if (e.features.length > 0) {
           if (hoveredStateId) { 
             map.current.setFeatureState(
@@ -122,53 +115,23 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
       });
 
       //get tilesets affecting the area
-      map.current.on('sourcedata', () => {
-        getAffectedTilesets(location);   
-      });
-
-      //change location by hover & getting tilesets.
+      map.current.once('idle', handleStyleData)
+     
+      //change location by hover.
       map.current.on('click','parcels-limit-fill', (e) => {
         getLocationHoverClick(e.lngLat.lng,e.lngLat.lat);
-        getAffectedTilesets(e.lngLat);
       });
 
-      /*Changue pointer on Water Main*/
-      map.current.on('mousemove','Water Main', () => {
-        map.current.getCanvas().style.cursor = 'pointer';
-      })
-      map.current.on('mouseleave','Water Main', () => {
-        map.current.getCanvas().style.cursor = '';
-      })
+      /*Changue pointer hover*/
+      handleLinePointer('Water Main');
+      handleLinePointer('Sewer Main');
+      handleLinePointer('Drain Conveyance');
 
-      map.current.on('click','Water Main', (e) => {
+      /*get tilesets on clic parcel*/
+      map.current.on('click',['Water Main','Sewer Main','Drain Conveyance'], (e) => {
         getAffectedTilesets(e.lngLat);
       });
       
-      /*Change pointer on Sewer Main*/
-     map.current.on('mousemove','Sewer Main', () => {
-        map.current.getCanvas().style.cursor = 'pointer';
-      })
-      map.current.on('mouseleave','Sewer Main', () => {
-        map.current.getCanvas().style.cursor = '';
-      })
-
-      map.current.on('click','Sewer Main', (e) => {
-        getAffectedTilesets(e.lngLat);
-      });
-
-      /*Change pointer on Drain Conveyance*/
-      map.current.on('click','Drain Conveyance', (e) => {
-        getAffectedTilesets(e.lngLat);
-      });
-
-     map.current.on('mousemove','Drain Conveyance', () => {
-        map.current.getCanvas().style.cursor = 'pointer';
-      })
-      map.current.on('mouseleave','Drain Conveyance', () => {
-        map.current.getCanvas().style.cursor = '';
-      })
-     
-
       return () => {
         if (map.current) {
           map.current.remove();
@@ -182,10 +145,7 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
         if (location.lng && location.lat) {
           marker.current.setLngLat([location.lng, location.lat]);
           map.current.flyTo({ center: [location.lng, location.lat]});
-          
-          map.current.on('sourcedata', () => {
-            getAffectedTilesets(location);   
-          });
+          map.current.once('idle',handleStyleData);
         }
       }
     }, [location]);
@@ -199,9 +159,14 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
       }
     }, [pitch]);
 
+
+
+
+
     //Function to get the tilesets in an array
     const getAffectedTilesets = (location) => {
       let point = map.current.project(location);
+      
       const tilesetsOnMap = map.current.queryRenderedFeatures(point);
       const tilesetProperties = ['id', 'layer', 'properties'];
     
@@ -230,18 +195,23 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
           return { id, name, properties };
         })
         .filter((feat) => {
-          return tilesets.content.includes(feat.name);
+          return tilesets.content.some((item) => item.id === feat.name);
         });
     
       setTileAffecting(description);
     };
     
+    const handleStyleData = () => {
+      getAffectedTilesets(location);
+    };
+
     //Display layers.
     function setLayerVisibility(layerName, isVisible) {
       const visibility = isVisible ? 'visible' : 'none';
       if (map.current) {
         map.current.setLayoutProperty(layerName, 'visibility', visibility);
       }
+      map.current.once('idle',handleStyleData);
     }
    
     //Function to get location by click.
@@ -263,6 +233,97 @@ const Map = ({location, address,handleChangue,handleSubmit,setHoverCoordinates,s
         console.log(error);
       }
     }
+
+    //Adding sources to mapbox
+    const addSources = (source,url_source) => {
+      map.current.addSource(source,{
+        type: 'vector',
+        url: url_source
+      });
+    }
+
+    const addParcelSource = (source,url_source) => {
+      map.current.addSource(source, {
+        type: 'vector',
+        url: url_source
+      });
+    }
+
+    //Adding circle layers
+    const addCircleLayer = (layerId,layerType,layerSource,radius,color,strokeColor,strokeWidth) => {
+      map.current.addLayer({
+        id : layerId,
+        type: layerType,
+        source: layerSource, 'source-layer': layerSource,
+          'paint': {
+            'circle-radius': radius,
+            'circle-color': color,
+            'circle-stroke-color' : strokeColor,
+            'circle-stroke-width' : strokeWidth
+          }
+      });
+    }
+    //Adding line layers
+    const addLineLayer = (layerId,layerType,layerSource,lineColor,lineWidth) => {
+      map.current.addLayer({
+          id: layerId,
+          type: layerType,
+          source: layerSource, 'source-layer': layerSource,
+            'paint': {
+                'line-color': lineColor,
+                'line-width': lineWidth
+            }
+      });
+    }
+    //Adding fill layers
+    const addFillLayer = (layerId,layerType,layerSource, color, opacity) => {
+      map.current.addLayer({
+        'id': layerId,
+        'type': layerType,
+        'source': layerSource,'source-layer': layerSource,
+        'paint': {
+          'fill-color': color,
+          'fill-opacity':  opacity
+        }
+      });
+    }
+
+    //Adding parcel limits fill
+    const addParcelFill = (layerId,layerType,layerSource,color,opacity) => {
+      map.current.addLayer({
+        'id': layerId,
+        'type': layerType,
+        'source': layerSource,'source-layer': 'citysandiego',
+        'paint': {
+          'fill-color': color,
+          'fill-opacity':  opacity
+        }
+      });
+    }
+
+    const addParcelLine = (layerId,layerType,layerSource,color,width,dash) => {
+      map.current.addLayer({
+        id: layerId,
+        type: layerType,
+        source: layerSource, 'source-layer': 'citysandiego',
+        'paint': {
+          'line-color': color,
+          'line-width': width,
+          'line-dasharray': dash
+        }
+      });
+    }
+
+    const handleLinePointer = (layerId) => {
+      map.current.on('mousemove',layerId, () => {
+        map.current.getCanvas().style.cursor = 'pointer';
+      });
+
+      map.current.on('mouseleave',layerId, () => {
+        map.current.getCanvas().style.cursor = '';
+      })
+    }
+
 
     return(
             <Layout>
