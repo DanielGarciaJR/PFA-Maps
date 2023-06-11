@@ -3,7 +3,7 @@ import LocationForm from './LocationForm';
 import TilesetContainer from './TilesetContainer';
 
 /*Component to show tileset Information*/
-const Sidebar = ({form,formSubmit,tilesets}) => {
+const Sidebar = ({form,formSubmit,tilesets, newLocationInput}) => {
     
     return (
       <div className="bg-white w-[25%] h-screen  absolute top-0 right-0 drop-shadow-md overflow-y-scroll ">
@@ -12,6 +12,7 @@ const Sidebar = ({form,formSubmit,tilesets}) => {
             <div>
                 <LocationForm 
                   formValue={form} 
+                  newLocationInput={newLocationInput}
                   formSubmitData={formSubmit}
                 />
             </div>

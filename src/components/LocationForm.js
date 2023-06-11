@@ -1,16 +1,18 @@
 import { FaSearch } from "react-icons/fa";
 import dynamic from 'next/dynamic';
 
+
 const AddressAutofill = dynamic(
     () => import('@mapbox/search-js-react').then((module) => module.AddressAutofill),
     { ssr: false }
 );
 
 /*Map's Search Bar*/
-const LocationForm = ({formValue,formSubmitData}) => {
+const LocationForm = ({formValue,formSubmitData, newLocationInput}) => {
+
     return(
         <div>
-            <form onSubmit={formSubmitData}>
+            <form onSubmit={(e) => formSubmitData(e,newLocationInput)}>
                 <AddressAutofill accessToken={process.env.MAPBOX_TOKEN} options={{types: ['country', 'region', 'place', 'postcode', 'locality', 'neighborhood']}}>
                 <input
                     type="text" 

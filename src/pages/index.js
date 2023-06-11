@@ -1,10 +1,11 @@
-import { useState} from "react";
 import { FaSearch } from "react-icons/fa";
 import Layout from '@/components/Layout';
 import Image from 'next/image';
 import Map from './app/Map';
 import dynamic from 'next/dynamic';
 import ErrorMessage from "@/components/ErrorMessage";
+import { useHandleForm } from '../hooks/useHandleForm';
+import { useFetch } from '../hooks/useFetch';
 
 
 const AddressAutofill = dynamic(
@@ -14,45 +15,9 @@ const AddressAutofill = dynamic(
 
 export default function Home() {
   
-  //state
-  const [locationInput, setLocationInput] = useState('');
-  const [locationMap,setLocationMap] = useState('');
-  const [coordinates, setCoordinates] = useState({ lng : null, lat : null});
-  const [showMap ,setShowMap] = useState(false);
-  const [showError, setShowError] = useState(false); 
+  const { locationInput, handleChange } = useHandleForm();
+  const { showMap,locationMap,coordinates,showError,setShowError,setCoordinates,setLocationMap,handleSubmit } = useFetch();
 
-  //get input value
-  const handleChangue = (e) => {
-    e.preventDefault();
-    setLocationInput(e.target.value);
-  }
-
-  //do get for request a location
-  const handleSubmit =  async(e) => {
-    e.preventDefault();
-    
-    if(!locationInput){
-      setShowError(true);
-    }else{
-      try{
-        const bbox = '-124.409619,32.534156,-114.131211,42.009518';
-        const res = await fetch(`${process.env.GEOCODING_URL}mapbox.places/${locationInput}.json?access_token=${process.env.MAPBOX_TOKEN}&country=us&bbox=${bbox}`);
-        const data = await res.json();
-
-        setCoordinates({
-            lng: data.features[0].center[0],
-            lat: data.features[0].center[1]
-        });
-
-        setLocationMap(data.features[0].place_name);
-        setShowMap(true);
-  
-      }catch(error){
-        console.log(error);
-      }
-    }
-  }
-  
   return ( 
     <>
        <Layout>
@@ -73,7 +38,7 @@ export default function Home() {
                   height="75"
                 />
 
-                <form onSubmit={handleSubmit} className="flex flex-row">
+                <form onSubmit={(e) => handleSubmit(e,locationInput)} className="flex flex-row">
                  
                  <AddressAutofill accessToken={process.env.MAPBOX_TOKEN} options={{types: ['country', 'region', 'place', 'postcode', 'locality', 'neighborhood']}}>
                     <input
@@ -84,7 +49,7 @@ export default function Home() {
                       autoComplete="address-line1"
                       placeholder="214 Landis Ave, Chula Vista example" 
                       value={locationInput} 
-                      onChange={handleChangue}
+                      onChange={handleChange}
                       onFocus={() => setShowError(false)}
                     >
                     </input>
@@ -108,7 +73,13 @@ export default function Home() {
                 }
             </div>
        ): <Map 
-              location={coordinates} address={locationMap} handleChangue={handleChangue} handleSubmit={handleSubmit} setHoverCoordinates={setCoordinates} setHoverCurrentLocation={setLocationMap}>
+              coordinates={coordinates} 
+              address={locationMap} 
+              handleChangue={handleChange} 
+              handleSubmit={handleSubmit} 
+              locationInput={locationInput} 
+              setHoverCoordinates={setCoordinates} 
+              setHoverCurrentLocation={setLocationMap}>
           </Map>}
 
       </Layout>
