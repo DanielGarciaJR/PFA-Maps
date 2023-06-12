@@ -33,12 +33,6 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
         map.current.on('load', () => {
             map.current.addControl(new mapboxgl.NavigationControl());
           
-            //adding special source & layer
-            addParcelSource('city of san diego parcels','mapbox://multitaskr.citysandiego')
-            addParcelFill('parcels-limit-fill','fill','city of san diego parcels','#DFCAEC',[ 'case',['boolean', ['feature-state', 'hover'], false],1,0]);
-            addParcelLine('parcels-limit','line','city of san diego parcels','#740595',3,[2,2]);
-            
-
             //adding interactive tilesets & sources
             tilesets.content.map((data) => {
                 addSources(data.source,data.url);
@@ -46,11 +40,13 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
                 if(data.type == 'circle'){
                   addCircleLayer(data.id,data.type,data.source,data.properties.radius,data.properties.color,data.properties.strokeColor,data.properties.strokeWidth);
                 }else if(data.type == 'line'){
-                  addLineLayer(data.id,data.type,data.source,data.properties.lineColor,data.properties.lineWidth);
+                  addLineLayer(data.id,data.type,data.source,data.properties.lineColor,data.properties.lineWidth,data.properties.lineDash);
                 }else if(data.type == 'fill'){
                   addFillLayer(data.id,data.type,data.source,data.properties.color, data.properties.opacity);
                 }
             });
+
+            addFillLayer('parcels-limit-fill','fill','parcels','#DFCAEC',[ 'case',['boolean', ['feature-state', 'hover'], false],1,0]);
 
             //moving layer position
             map.current.moveLayer('parcels-limit-fill', 'building-extrusion');
@@ -68,8 +64,8 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
               if (hoveredStateId) { 
                 map.current.setFeatureState(
                   { 
-                    source: 'city of san diego parcels', 
-                    sourceLayer: 'citysandiego', 
+                    source: 'parcels', 
+                    sourceLayer: 'parcels', 
                     id: hoveredStateId 
                   },
                   { 
@@ -79,8 +75,8 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
               }
               hoveredStateId = e.features[0].id;
               map.current.setFeatureState({ 
-                source: 'city of san diego parcels', 
-                sourceLayer: 'citysandiego', 
+                source: 'parcels', 
+                sourceLayer: 'parcels', 
                 id: hoveredStateId 
               },
               { 
@@ -93,8 +89,8 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
         map.current.on('mouseleave', 'parcels-limit-fill', function () {
           if (hoveredStateId) {
               map.current.setFeatureState({ 
-                source: 'city of san diego parcels', 
-                sourceLayer: 'citysandiego', 
+                source: 'parcels', 
+                sourceLayer: 'parcels', 
                 id: hoveredStateId 
               },
               { 
@@ -148,47 +144,12 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
     }, [pitch]);
 
 
-    //Adding parcel source
-    const addParcelSource = (source,url_source) => {
-        map.current.addSource(source, {
-          type: 'vector',
-          url: url_source
-        });
-    }
-
     //Adding interactive sources
     const addSources = (source,url_source) => {
         map.current.addSource(source,{
           type: 'vector',
           url: url_source
         });
-    }
-
-    //Adding parcel fill layer to hover effect
-    const addParcelFill = (layerId,layerType,layerSource,color,opacity) => {
-      map.current.addLayer({
-        'id': layerId,
-        'type': layerType,
-        'source': layerSource,'source-layer': 'citysandiego',
-        'paint': {
-          'fill-color': color,
-          'fill-opacity':  opacity
-        }
-      });
-    }
-
-    //Adding parcel line limit layer
-    const addParcelLine = (layerId,layerType,layerSource,color,width,dash) => {
-      map.current.addLayer({
-        id: layerId,
-        type: layerType,
-        source: layerSource, 'source-layer': 'citysandiego',
-          'paint': {
-            'line-color': color,
-            'line-width': width,
-            'line-dasharray': dash
-          }
-      });
     }
 
     //Adding circle layers
@@ -207,14 +168,15 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
     }
 
     //Adding line layers.
-    const addLineLayer = (layerId,layerType,layerSource,lineColor,lineWidth) => {
+    const addLineLayer = (layerId,layerType,layerSource,lineColor,lineWidth,dash) => {
       map.current.addLayer({
         id: layerId,
         type: layerType,
         source: layerSource, 'source-layer': layerSource,
           'paint': {
                 'line-color': lineColor,
-                'line-width': lineWidth
+                'line-width': lineWidth,
+                'line-dasharray': dash
           }
       });
     }

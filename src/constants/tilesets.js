@@ -27,28 +27,35 @@ export default  {
             source: 'drain_conveyance-03ogid', 
             url: 'mapbox://multitaskr.btfld2ct',
             type: 'line',
-            properties: { lineColor : '#eed5fb' , lineWidth: 2 }
+            properties: { lineColor : '#eed5fb' , lineWidth: 2, lineDash: [1,0] }
         },
         { 
             id: 'Water Main', 
             source: 'water_main-75owv2', 
             url: 'mapbox://multitaskr.0maz1ai4',
             type: 'line',
-            properties: { lineColor : '#6090e1' , lineWidth: 2 }
+            properties: { lineColor : '#6090e1' , lineWidth: 2 , lineDash: [1,0]}
         },
         { 
             id: 'Sewer Main', 
             source: 'sewer_main-2lwed6', 
             url: 'mapbox://multitaskr.5jrwnqm3',
             type: 'line',
-            properties: { lineColor : '#898648' , lineWidth: 2 }
+            properties: { lineColor : '#898648' , lineWidth: 2 , lineDash: [1,0]}
+        },
+        {
+            id: 'parcels-limit',
+            source: 'parcels',
+            url: 'mapbox://multitaskr.parcels',
+            type: 'line',
+            properties: { lineColor: '#740595', lineWidth: 2, lineDash: [2,2]}
         },
         { 
             id: 'Solid Report Conditional', 
             source: 'solid_report_conditional-4381r9', 
             url: 'mapbox://multitaskr.53qdu7rb',
             type: 'fill',
-            properties: { color: '#65109e', opacity: 0.39 }
+            properties: { color: '#65109e', opacity: 0.39}
         },
         { 
             id: 'Fire Hazard Severity Zones', 
@@ -63,7 +70,6 @@ export default  {
             url: 'mapbox://multitaskr.9cu1lnxe',
             type: 'fill',
             properties: { color: '#9895e9', opacity: 0.56 }
-        },
-       
+        }
     ]
 }
