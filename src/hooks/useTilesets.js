@@ -137,9 +137,15 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
 
     useEffect(() => {
       if (pitch) {
-        map.current.setPitch(60);
+        map.current.easeTo({
+          pitch: 60,  
+          duration: 2000  
+        });
       } else {
-          map.current.setPitch(0);
+          map.current.easeTo({
+            pitch: 0,  
+            duration: 2000  
+          });
       }
     }, [pitch]);
 
