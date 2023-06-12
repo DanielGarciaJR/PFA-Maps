@@ -44,11 +44,11 @@ export default  {
             properties: { lineColor : '#898648' , lineWidth: 2 , lineDash: [1,0]}
         },
         {
-            id: 'parcels-limit',
+            id: 'Parcel Information',
             source: 'parcels',
             url: 'mapbox://multitaskr.parcels',
-            type: 'line',
-            properties: { lineColor: '#740595', lineWidth: 2, lineDash: [2,2]}
+            type: 'fill',
+            properties: { color: '#DFCAEC', opacity: ['case',['boolean', ['feature-state', 'hover'], false],1,0]}
         },
         { 
             id: 'Solid Report Conditional', 

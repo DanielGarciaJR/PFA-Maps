@@ -46,10 +46,10 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
                 }
             });
 
-            addFillLayer('parcels-limit-fill','fill','parcels','#DFCAEC',[ 'case',['boolean', ['feature-state', 'hover'], false],1,0]);
+            addLineLayer('parcel-limit','line','parcels','#740595',2,[2,2]);
 
             //moving layer position
-            map.current.moveLayer('parcels-limit-fill', 'building-extrusion');
+            map.current.moveLayer('Parcel Information', 'building-extrusion');
             map.current.moveLayer('Drain Conveyance', 'Storm Water');
             map.current.moveLayer('Water Main', 'Drain Conveyance');
             map.current.moveLayer('Sewer Main', 'Sewer Manhole');
@@ -59,7 +59,7 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
         });
 
         //Hover effect
-        map.current.on('mousemove', 'parcels-limit-fill', function (e) {
+        map.current.on('mousemove', 'Parcel Information', function (e) {
             if (e.features.length > 0) {
               if (hoveredStateId) { 
                 map.current.setFeatureState(
@@ -86,7 +86,7 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
           });
 
         //Remove Hover Effect
-        map.current.on('mouseleave', 'parcels-limit-fill', function () {
+        map.current.on('mouseleave', 'Parcel Information', function () {
           if (hoveredStateId) {
               map.current.setFeatureState({ 
                 source: 'parcels', 
@@ -104,7 +104,7 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
         map.current.once('idle', handleStyleData)
 
         //Change location on click
-        map.current.on('click','parcels-limit-fill', (e) => {
+        map.current.on('click','Parcel Information', (e) => {
               getLocationHoverClick(e.lngLat.lng, e.lngLat.lat);
         });
 
@@ -203,12 +203,12 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
     //change pointer & hide parcel fill.
     const handleLinePointer = (layerId) => {
       map.current.on('mousemove',layerId, () => {
-        map.current.setLayoutProperty('parcels-limit-fill', 'visibility', 'none');
+        map.current.setLayoutProperty('Parcel Information', 'visibility', 'none');
         map.current.getCanvas().style.cursor = 'pointer';
       });
   
       map.current.on('mouseleave',layerId, () => {
-        map.current.setLayoutProperty('parcels-limit-fill', 'visibility', 'visible');
+        map.current.setLayoutProperty('Parcel Information', 'visibility', 'visible');
         map.current.getCanvas().style.cursor = '';
       });
     }
