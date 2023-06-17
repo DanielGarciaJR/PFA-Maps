@@ -1,5 +1,4 @@
 import { FaLaptopHouse } from 'react-icons/fa';
-import { useSidebarMenu } from '@/hooks/useSidebarMenu';
 import LocationForm from './LocationForm';
 import TilesetContainer from './TilesetContainer';
 import GeojsonForm from './GeojsonForm';
@@ -8,8 +7,6 @@ import GeojsonForm from './GeojsonForm';
 /*Component to show tileset Information*/
 const SidebarClient = ({form,formSubmit,tilesets, newLocationInput}) => {
 
-    const { loadTileSection, loadUploadSection, section} = useSidebarMenu();
-    
     return (
       <div className="bg-white w-[25%] h-screen   absolute top-12 right-0 overflow-y-scroll ">
         <div>
@@ -22,17 +19,6 @@ const SidebarClient = ({form,formSubmit,tilesets, newLocationInput}) => {
                 />
             </div>
 
-            {/*div for content menu*/}
-            <div className="p-2 mt-4 text-[14px]">
-              <ul className="flex text-gray-500">
-                <li onClick={loadTileSection} className='m-2 hover:underline hover:cursor-pointer'>Parcels</li>
-                <li onClick={loadUploadSection}  className='m-2 hover:underline hover:cursor-pointer'>Upload Files</li>
-              </ul>
-            </div>
-            
-            {/*Tileset content*/}
-            {section.tile && 
-              <>
                 {/*div for description*/}
                 <div className="mt-[10%] flex-col flex items-center justify-center">
                   <FaLaptopHouse className="w-[30px] h-[30px] mb-[5%] "/>
@@ -53,11 +39,6 @@ const SidebarClient = ({form,formSubmit,tilesets, newLocationInput}) => {
                     </TilesetContainer>
                 ))}
                 </div>
-              </>
-            }
-
-            {/*Upload form content*/}
-            {section.upload && <GeojsonForm></GeojsonForm>}
         </div>
       </div>
     );
