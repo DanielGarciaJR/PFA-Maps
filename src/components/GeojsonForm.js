@@ -1,4 +1,4 @@
-import { useGeoJsonForm } from "@/hooks/usedGeojsonForm";
+import { useGeoJsonForm } from "@/hooks/useGeojsonForm";
 import ErrorMessage from "./ErrorMessage";
 
 const GeojsonForm = () => {
