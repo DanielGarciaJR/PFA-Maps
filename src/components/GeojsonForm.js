@@ -9,7 +9,7 @@ const GeojsonForm = () => {
         <div className='p-3'>
             <div className='m-1'>
                 <h1 className="mb-3">Choose a GeoJson file</h1>
-                <form onSubmit={handleSubmit} className='text-[13px] flex flex-col'>
+                <form name="geojson" onSubmit={handleSubmit} className='text-[13px] flex flex-col'>
                     <input type="file" accept=".geojson" required onChange={handleChange} onFocus={() => setError(false)} ref={fileRef}/>
                     {error && 
                         <ErrorMessage>
@@ -18,7 +18,7 @@ const GeojsonForm = () => {
                             </p>
                         </ErrorMessage>
                     }
-                    <button type="submit" className="text-white bg-purple-700 w-20 p-1 rounded-md mt-5">Save</button>
+                    {/*<button type="submit" className="text-white bg-purple-700 w-20 p-1 rounded-md mt-5">Save</button>*/}
                 </form>
             </div>
         </div>

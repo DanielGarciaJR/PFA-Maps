@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import axios from "axios";
 
 //geojson form and validations
 export const useGeoJsonForm = () => {
@@ -14,7 +15,7 @@ export const useGeoJsonForm = () => {
         setGeoJson(file)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const extension = geoJson.name.split('.').pop();
@@ -22,9 +23,23 @@ export const useGeoJsonForm = () => {
         if (extension === 'geojson') {
           setError(false);
 
-          //peticion a la base de datos
-          console.log('geojson saved...')
+          try{
+            const formData = new FormData();
+            formData.append('geojson',geoJson);
 
+            const response = await axios.post('https://flask-production-fc2b.up.railway.app/',formData, {
+              headers: { 
+                'Content-Type': 'multipart/form-data',
+              },
+              mode: 'cors', 
+            });
+
+            console.log(response);
+
+          }catch(error){
+            console.log(error);
+          }
+         
           setGeoJson(null);
           fileRef.current.value = null;
         } else {
