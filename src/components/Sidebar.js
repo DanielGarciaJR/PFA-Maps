@@ -7,7 +7,7 @@ import GeojsonForm from './GeojsonForm';
 /*Component to show tileset Information*/
 const Sidebar = ({form,formSubmit,tilesets, newLocationInput}) => {
     
-    const { loadTileSection, loadUploadSection, section} = useSidebarMenu();
+    const { loadTileSection, loadUploadSection, section, tileSectionRef, uploadSectionRef } = useSidebarMenu();
 
     return (
       <div className="bg-white w-[25%] h-screen  absolute top-0 right-0 drop-shadow-md overflow-y-scroll ">
@@ -22,10 +22,10 @@ const Sidebar = ({form,formSubmit,tilesets, newLocationInput}) => {
             </div>
 
              {/*div for content menu*/}
-             <div className="p-2 mt-4 text-[14px]">
+             <div className="p-2 mt-4 text-[12px]">
               <ul className="flex text-gray-500">
-                <li onClick={loadTileSection} className='m-2 hover:underline hover:cursor-pointer'>Tilesets</li>
-                <li onClick={loadUploadSection}  className='m-2 hover:underline hover:cursor-pointer'>Upload Files</li>
+                <li onClick={loadTileSection} className='m-2 hover:underline hover:cursor-pointer' ref={tileSectionRef}>Tilesets</li>
+                <li onClick={loadUploadSection}  className='m-2 hover:underline hover:cursor-pointer' ref={uploadSectionRef}>Upload Files</li>
               </ul>
             </div>
 
@@ -33,7 +33,7 @@ const Sidebar = ({form,formSubmit,tilesets, newLocationInput}) => {
             {section.tile && 
               <>
                 {/*div for description*/}
-                <div className="mt-[10%] flex-col flex items-center justify-center">
+                <div className="mt-[6%] flex-col flex items-center justify-center">
                   <FaBuffer className="w-[30px] h-[30px] mb-[5%] "/>
                   <p className="text-[20px] text-center">
                     Tilesets Information
