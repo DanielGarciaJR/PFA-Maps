@@ -26,12 +26,13 @@ export const useGeoJsonForm = () => {
           try{
             const formData = new FormData();
             formData.append('geojson',geoJson);
+            formData.append('category','prueba');
 
-            const response = await axios.post('https://flask-production-fc2b.up.railway.app/',formData, {
+            const response = await axios.post('https://django-server-production-da13.up.railway.app/tilesets',formData, {
               headers: { 
                 'Content-Type': 'multipart/form-data',
               },
-              mode: 'cors', 
+             mode: 'cors', 
             });
 
             console.log(response);
