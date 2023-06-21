@@ -7,6 +7,7 @@ import AppContext from "../Global/userContext"
 export const useLogin = () => {
    
     const [credentials,setCredentials] = useState({ username: "",password: ""});
+    const [loginError, setLoginError] = useState(null);
 
     const context = useContext(AppContext);
     const router = useRouter();
@@ -45,12 +46,12 @@ export const useLogin = () => {
             
 
           } catch (error) {
-            console.error(error.response.data);
+            setLoginError(error.response.data);
           }
     }
 
 
 
-    return { handleChange, handleSubmit }
+    return { handleChange, handleSubmit, loginError, setLoginError }
 }
 
