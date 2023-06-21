@@ -22,7 +22,7 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
             container: mapContainer.current,
             style: 'mapbox://styles/multitaskr/cli3pe0e700xd01podw5ufbfd',
             center: [coordinates.lng, coordinates.lat],
-            zoom: 20,
+            zoom: 17,
             pitch: 0
         });
 

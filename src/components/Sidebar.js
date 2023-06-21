@@ -11,7 +11,7 @@ const Sidebar = ({form,formSubmit,tilesets, newLocationInput}) => {
     const { loadTileSection, loadUploadSection, section} = useSidebarMenu();
     
     return (
-      <div className="bg-white w-[25%] h-screen  absolute top-0 right-0 drop-shadow-md overflow-y-scroll ">
+      <div className="bg-white w-[25%] h-screen   absolute top-12 right-0 overflow-y-scroll ">
         <div>
             {/*div for search bar form*/}
             <div>
@@ -34,8 +34,8 @@ const Sidebar = ({form,formSubmit,tilesets, newLocationInput}) => {
             {section.tile && 
               <>
                 {/*div for description*/}
-                <div className="mt-[10%] flex-col flex items-center justify-center">
-                  <FaBuffer className="w-[30px] h-[30px] mb-[5%] "/>
+                <div className="mt-[4%] flex-col flex items-center justify-center">
+                  <FaBuffer className="w-[30px] h-[30px] mb-[3%] "/>
                   <p className="text-[20px] text-center">
                     Tilesets Information
                   </p>

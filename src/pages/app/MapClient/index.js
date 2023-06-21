@@ -1,5 +1,5 @@
 import { useTilesetsClient} from '@/hooks/useTilesetsClient';
-import { useFetchClient } from '@/hooks/useFetchClient';
+import { useFetch } from '@/hooks/useFetch';
 import { useHandleForm } from '@/hooks/useHandleForm';
 import LayoutClient from '@/components/LayoutClient';
 import mapboxgl from 'mapbox-gl';
@@ -15,7 +15,7 @@ mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 const MapClient = () => {
 
     const { locationInput, handleChange } = useHandleForm();
-    const { coordinates,setCoordinates,locationMap, setLocationMap,handleSubmit } = useFetchClient();
+    const { coordinates,setCoordinates,locationMap, setLocationMap,handleSubmit } = useFetch();
     const { mapContainer, tileAffecting, pitch, setPitch, setLayerVisibility } = useTilesetsClient(coordinates,setCoordinates,setLocationMap);
 
     return(

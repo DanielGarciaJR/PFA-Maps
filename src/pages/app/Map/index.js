@@ -6,15 +6,18 @@ import Sidebar from '@/components/Sidebar';
 import LocationLabel from '@/components/LocationLabel';
 import ButtonPitch from '@/components/ButtonPitch';
 import { useTilesets } from '@/hooks/useTilesets';
+import { useFetch } from '@/hooks/useFetch';
+import { useHandleForm } from '@/hooks/useHandleForm';
 
 
 //Mapbox token
 mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
-const Map = ({coordinates, address,handleChangue, handleSubmit,setHoverCoordinates,setHoverCurrentLocation,locationInput}) => {
+const Map = () => {
 
-    const { mapContainer, tileAffecting, pitch, setPitch, setLayerVisibility } = useTilesets(coordinates,setHoverCoordinates,setHoverCurrentLocation);
-   
+    const { locationInput, handleChange } = useHandleForm();
+    const { coordinates,setCoordinates,locationMap, setLocationMap,handleSubmit } = useFetch();
+    const { mapContainer, tileAffecting, pitch, setPitch, setLayerVisibility } = useTilesets(coordinates,setCoordinates,setLocationMap);
 
     return(
             <Layout>
@@ -29,7 +32,7 @@ const Map = ({coordinates, address,handleChangue, handleSubmit,setHoverCoordinat
                 
                 {/*Sidebar Information*/}
                 <Sidebar 
-                  form={handleChangue}
+                  form={handleChange}
                   newLocationInput={locationInput}
                   formSubmit={handleSubmit} 
                   tilesets={tileAffecting}>
@@ -37,7 +40,7 @@ const Map = ({coordinates, address,handleChangue, handleSubmit,setHoverCoordinat
                 
                 {/*Current Location*/}
                 <LocationLabel 
-                  currentAddress={address}>
+                  currentAddress={locationMap}>
                 </LocationLabel>
 
                 {/*Changue pitch*/}

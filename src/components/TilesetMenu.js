@@ -34,7 +34,7 @@ const TilesetMenu = ({tilesetVisibility }) => {
     return(
         <>
             {/*Div tileset button*/}
-            <div  ref={openButton} className="absolute top-2 z-10 ml-3 bg-white text-gray-500 p-2 rounded-lg border-[1px] drop-shadow-lg hover:bg-gray-200">
+            <div  ref={openButton} className="absolute top-14 z-10 ml-3 bg-white text-gray-500 p-2 rounded-lg border-[1px] drop-shadow-lg hover:bg-gray-200">
                 <button onClick={showMenu}>
                     {/*{tilesetMenu ? <FaBuffer className="w-6"/> : <HiX className='w-6'/>}*/}
                     {tilesetMenu && <FaBuffer className="w-6 "/>}
@@ -42,7 +42,7 @@ const TilesetMenu = ({tilesetVisibility }) => {
             </div>
 
             {/*Div tileset menu*/}
-            <div ref={containerMenu} className="absolute top-2 ml-2 p-1 pl-3 pr-3 bg-white text-black rounded-lg border-[1px] drop-shadow-lg h-[30%]  overflow-y-scroll text-[80%]  hidden">
+            <div ref={containerMenu} className="absolute top-14 ml-2 p-1 pl-3 pr-3 bg-white text-black rounded-lg border-[1px] drop-shadow-lg h-[30%]  overflow-y-scroll text-[80%]  hidden">
                 {!tilesetMenu && <button className="mt-3" onClick={showMenu}><HiX className='w-7 h-4 text-gray-500'/></button>}
                 <p className="text-center text-black font-medium mt-[-23px]">Display tilesets</p>
 
