@@ -1,13 +1,16 @@
-import { useContext, useState } from "react";
+import {  useState , useContext} from "react";
 import { useRouter } from "next/router";
+import jwt from 'jsonwebtoken'; 
+import { serialize } from 'cookie';
 import axios from "axios";
 import AppContext from "../Global/userContext"
 
 
+
 export const useLogin = () => {
    
-    const [credentials,setCredentials] = useState({ username: "",password: ""});
-    const [loginError, setLoginError] = useState(null);
+    const [credentials,setCredentials] = useState({ email: "",password: ""});
+    //const [loginError, setLoginError] = useState(null);
 
     const context = useContext(AppContext);
     const router = useRouter();
@@ -23,35 +26,34 @@ export const useLogin = () => {
         e.preventDefault();
     
         try {
+          
             //peticion para el token
-            const response = await axios.post("/api/auth/login", credentials);
+            const response = await axios.post('/api/auth/login',credentials);
+
+            //peticion para obtener los datos del token
             const responseUser = await axios.post("/api/auth/user");
 
             console.log(response);
 
-            console.log(responseUser);
-            
-            if(response.status == 200){
+            context.setTokenContext(responseUser.data.token);
+
+            if(response.status == 200 && responseUser.data.role == 'admin'){
                 context.setUserContext({
                     username: responseUser.data.user,
-                    password: responseUser.data.password
+                    role: responseUser.data.role
                 })
 
-                if(responseUser.data.user == "admin21"){
-                    router.push('/app/Map');
-                }else if(responseUser.data.user == "client21"){
-                    router.push('/app/MapClient');
-                }
+                router.push('/app/Map');
             }
             
-
           } catch (error) {
-            setLoginError(error.response.data);
+           // setLoginError(/*error.response.data*/error);
+            console.log(error);
           }
     }
 
 
 
-    return { handleChange, handleSubmit, loginError, setLoginError }
+    return { handleChange, handleSubmit, /*loginError, setLoginError*/ }
 }
 

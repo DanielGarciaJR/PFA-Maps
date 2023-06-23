@@ -9,7 +9,7 @@ export default function logOutHandler(req,res){
 
 
     try{
-        verify(myTokenName,'secret')
+        verify(myTokenName,'token')
         
         const serialized = serialize('myTokenName', null, {
             httpOnly: true,

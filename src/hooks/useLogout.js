@@ -14,7 +14,8 @@ export const useLogout = () => {
             context.setUserContext({
                 username: '',
                 password: '',
-            })
+            });
+            context.setTokenContext('');
 
             router.push('/app/Login');
         }catch(error){

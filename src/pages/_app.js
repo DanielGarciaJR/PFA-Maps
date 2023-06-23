@@ -7,7 +7,9 @@ import AppContext from '@/Global/userContext';
 
 export default function App({ Component, pageProps }) {
   
-  const [userContext,setUserContext] = useState({username : '',password : '',});
+  const [userContext,setUserContext] = useState({username : '',role : '',});
+  const [tokenContext, setTokenContext] = useState('');
+  const [aduContext,setAduContext] = useState([]);
 
 
   return(
@@ -16,7 +18,7 @@ export default function App({ Component, pageProps }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <AppContext.Provider value={{userContext,setUserContext}}>
+      <AppContext.Provider value={{userContext,setUserContext,tokenContext,setTokenContext,aduContext,setAduContext}}>
         <Component {...pageProps} /> 
       </AppContext.Provider>
     </>

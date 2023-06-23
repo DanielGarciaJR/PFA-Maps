@@ -28,9 +28,9 @@ const Layout = ({children}) => {
                         <Link className="m-4 hover:text-purple-200 hover:underline" href='/app/Catalog'>Catalog</Link>
                     </span>
                 </li>
-                <div className=" float-right w-[12%]">
+                <div className=" float-right w-[15%]">
                     <FaUserAlt className="w-4 h-5 mt-[-20px]"/>
-                    <p className="mt-[-21px] ml-7">{context.userContext.username}</p>
+                    <p className="mt-[-21px] ml-5">{context.userContext.username}</p>
                     <button className="float-right mt-[-24px]" onClick={logOut}>Sing out</button>
                 </div> 
             </div>
