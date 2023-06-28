@@ -18,7 +18,7 @@ const GeojsonForm = () => {
                             </p>
                         </ErrorMessage>
                     }
-                   { /*<button type="submit" className="text-white bg-purple-700 w-20 p-1 rounded-md mt-5">Save</button> */ }
+                   <button type="submit" className="text-white bg-purple-700 w-20 p-1 rounded-md mt-5">Save</button>
                 </form>
             </div>
         </div>
