@@ -19,4 +19,5 @@ export const useAduCatalog = () => {
         fetchData();
 
     },[context.aduContext])
+
 };

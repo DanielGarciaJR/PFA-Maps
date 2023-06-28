@@ -1,33 +1,38 @@
 import AppContext from "@/Global/userContext";
 import AduContainer from "@/components/AduContainer";
+import AduDetailSection from "@/components/AduDetailSection";
+import AddUserSection from "@/components/AddUserSection";
 import AduForm from "@/components/AduForm";
 import Layout from "@/components/Layout";
 import { useAduCatalog } from "@/hooks/useAduCatalog";
+import { useSidebarCatalog } from "@/hooks/useSidebarCatalog";
 import { useContext, useEffect } from "react";
+import axios from "axios";
 
 
 
 const Catalog = () => {
     
-    const context = useContext(AppContext);
-    useAduCatalog();
+    const {loadDetailSection,loadAddSection, section} = useSidebarCatalog();
 
+ 
     return(
         <Layout>
-            <div>
-                <div className="p-10 m-13">
-                    <div>
-                        <h2 className="text-[30px]">Add & consult all about ADU information</h2>
-                    </div>
-                    <div className="flex mt-5 ">
-                        <div className=" p-16 w-[48%] mr-[4%] rounded-lg border-gray-300 border">
-                            <AduForm/>
-                        </div>
-                        <div className="p-5 w-[48%] h-[580px] rounded-lg border-gray-300 border overflow-y-scroll bg-purple-700">
-                            {context.aduContext.map((el,index) => <AduContainer key={index} adu={el}/> )}
-                        </div>
-                    </div>
+            <div className="flex">
+                <div className="p-5 w-[15%] mt-[3%] h-28 border-r-2 text-gray-400/90">
+                    <ul className="ml-3">
+                        <li onClick={loadDetailSection} className="mb-3 hover:cursor-pointer">ADU Details</li>
+                        <li onClick={loadAddSection}  className="hover:cursor-pointer">Add Users</li>
+                    </ul>
                 </div>
+
+                {section.aduDetails && (
+                   <AduDetailSection/>
+                )}
+
+                {section.addUsers && 
+                    <AddUserSection/>
+                }
             </div>
         </Layout>
     );

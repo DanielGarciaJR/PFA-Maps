@@ -11,7 +11,6 @@ export default function App({ Component, pageProps }) {
   const [tokenContext, setTokenContext] = useState('');
   const [aduContext,setAduContext] = useState([]);
 
-
   return(
     <>
       <Head>
