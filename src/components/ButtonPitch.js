@@ -5,7 +5,7 @@ const ButtonPitch = ({pitch,setPitch}) => {
   //State
   const [pitchState,setPitchState] = useState('3D');
   
-  //change pitch and text button
+  //change pitch and text button text
   const handlePitch = () => {
     setPitch(!pitch);
 
@@ -17,8 +17,7 @@ const ButtonPitch = ({pitch,setPitch}) => {
   }
 
   return (
-    <div 
-      className="absolute top-28 ml-[72.2%] rounded-lg bg-white p-2 text-gray-500 drop-shadow-lg border-[1px] hover:bg-gray-200 text-[80%]">
+    <div className="absolute top-28 ml-[72.2%] rounded-lg bg-white p-2 text-gray-500 drop-shadow-lg border-[1px] hover:bg-gray-200 text-[80%]">
         <button 
           type='button' 
           onClick={handlePitch}>

@@ -1,4 +1,4 @@
-/*Component to show a dinamic error message in search barch*/
+/*Component to show a dinamic error message*/
 const ErrorMessage = ({children}) => {
     
     return(children);

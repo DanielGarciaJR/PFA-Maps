@@ -28,7 +28,7 @@ export const useGeoJsonForm = () => {
             formData.append('geojson',geoJson);
             formData.append('category','prueba');
 
-            const response = await axios.post('https://django-server-production-da13.up.railway.app/tilesets',formData, {
+            const response = await axios.post(`${process.env.GEOJSON_URL}/tilesets`,formData, {
               headers: { 
                 'Content-Type': 'multipart/form-data',
               },

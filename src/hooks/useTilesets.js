@@ -20,7 +20,7 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
        
         map.current = new mapboxgl.Map({ 
             container: mapContainer.current,
-            style: 'mapbox://styles/multitaskr/cli3pe0e700xd01podw5ufbfd',
+            style: `${process.env.MAPBOX_STYLE}`,
             center: [coordinates.lng, coordinates.lat],
             zoom: 20,
             pitch: 0

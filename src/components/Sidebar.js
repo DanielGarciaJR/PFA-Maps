@@ -23,11 +23,11 @@ const Sidebar = ({form,formSubmit,tilesets, newLocationInput}) => {
 
              {/*div for content menu*/}
              <div className="p-2 mt-4 text-[12px]">
-              <ul className="flex text-gray-500">
-                <li onClick={loadTileSection} className='m-2 hover:underline hover:cursor-pointer' ref={tileSectionRef}>Tilesets</li>
-                <li onClick={loadUploadSection}  className='m-2 hover:underline hover:cursor-pointer' ref={uploadSectionRef}>Upload Files</li>
-              </ul>
-            </div>
+                <ul className="flex text-gray-500">
+                  <li onClick={loadTileSection} className='m-2 hover:underline hover:cursor-pointer' ref={tileSectionRef}>Tilesets</li>
+                  <li onClick={loadUploadSection}  className='m-2 hover:underline hover:cursor-pointer' ref={uploadSectionRef}>Upload Files</li>
+                </ul>
+              </div>
 
             {/*Tileset content*/}
             {section.tile && 

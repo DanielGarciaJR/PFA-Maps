@@ -14,13 +14,13 @@ const LocationForm = ({formValue,formSubmitData, newLocationInput}) => {
         <div>
             <form onSubmit={(e) => formSubmitData(e,newLocationInput)}>
                 <AddressAutofill accessToken={process.env.MAPBOX_TOKEN} options={{types: ['country', 'region', 'place', 'postcode', 'locality', 'neighborhood']}}>
-                <input
-                    type="text" 
-                    placeholder="Search location"
-                    className='mt-5 ml-3 mr-3 p-2 w-[80%]  rounded-full border-2 border-slate-300 text-gray-500'
-                    autoComplete="address-line1"
-                    onChange={formValue}>
-                </input>
+                    <input
+                        type="text" 
+                        placeholder="Search location"
+                        className='mt-5 ml-3 mr-3 p-2 w-[80%]  rounded-full border-2 border-slate-300 text-gray-500'
+                        autoComplete="address-line1"
+                        onChange={formValue}>
+                    </input>
                 </AddressAutofill>
                 <button 
                     type='submit' 

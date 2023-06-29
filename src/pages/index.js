@@ -1,11 +1,11 @@
 import { FaSearch } from "react-icons/fa";
+import { useHandleForm } from '../hooks/useHandleForm';
+import { useFetch } from '../hooks/useFetch';
 import Layout from '@/components/Layout';
 import Image from 'next/image';
 import Map from './app/Map';
 import dynamic from 'next/dynamic';
 import ErrorMessage from "@/components/ErrorMessage";
-import { useHandleForm } from '../hooks/useHandleForm';
-import { useFetch } from '../hooks/useFetch';
 
 
 const AddressAutofill = dynamic(
