@@ -231,11 +231,11 @@ export const useTilesets = (coordinates, setHoverCoordinates,setHoverCurrentLoca
         return displayFeat;
       })
       .filter((feat, index, self) => {
-        // Filter duplicate tilesets
+        // eliminate duplicate tilesets
         return index === self.findIndex((t) => t.layer.id === feat.layer.id);
       });
       
-      // do the object array with tilesets
+      // do the object array with only tilesets we need
       const description = displayFeatures
         .map((feat) => {
           const id = feat.id;
