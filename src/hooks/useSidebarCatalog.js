@@ -14,7 +14,6 @@ export const useSidebarCatalog = () => {
     }
 
     const loadAddSection = () => {
-        
 
         setSeccion({aduDetails : false,addUsers :true})
     }

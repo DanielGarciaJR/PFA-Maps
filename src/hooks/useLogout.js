@@ -17,10 +17,10 @@ export const useLogout = () => {
             });
             context.setTokenContext('');
 
-            router.push('/app/Login');
+            router.push('/app/MapClient');
         }catch(error){
             console.log(error);
-            router.push('/app/Login');
+            router.push('/app/MapClient');
         }
     }
 

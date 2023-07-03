@@ -1,4 +1,6 @@
 import { useState, useRef } from "react";
+import axios from "axios";
+
 
 //geojson form and validations
 export const useGeoJsonForm = () => {
@@ -14,23 +16,38 @@ export const useGeoJsonForm = () => {
         setGeoJson(file)
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = async (e) => {
+      e.preventDefault();
 
-        const extension = geoJson.name.split('.').pop();
+      const extension = geoJson.name.split('.').pop();
 
-        if (extension === 'geojson') {
-          setError(false);
+      if (extension === 'geojson') {
+        setError(false);
 
-          //peticion a la base de datos
-          console.log('geojson saved...')
+        try{
+          const formData = new FormData();
+          formData.append('geojson',geoJson);
+          formData.append('category','prueba');
 
-          setGeoJson(null);
-          fileRef.current.value = null;
-        } else {
-          setError(true);
+          const response = await axios.post(`${process.env.GEOJSON_URL}/tilesets`,formData, {
+            headers: { 
+              'Content-Type': 'multipart/form-data',
+            },
+           mode: 'cors', 
+          });
+
+          console.log(response);
+
+        }catch(error){
+          console.log(error);
         }
-    }
+       
+        setGeoJson(null);
+        fileRef.current.value = null;
+      } else {
+        setError(true);
+      }
+  }
     
     return { handleChange, handleSubmit,setError, error, fileRef };
 }

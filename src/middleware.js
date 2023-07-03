@@ -7,7 +7,7 @@ export async function middleware(request) {
     const token = request.cookies.get('myTokenName');
     
         if(token == undefined){
-            return NextResponse.redirect(new URL('/app/Login',request.url))
+            return NextResponse.redirect(new URL('/app/MapClient',request.url))
         }
 
         try{
@@ -18,11 +18,11 @@ export async function middleware(request) {
 
         }catch(error){
             console.log(error);
-            return NextResponse.redirect(new URL("/app/Login",request.url))
+            return NextResponse.redirect(new URL("/app/MapClient",request.url))
         }
 }
 
 //rutas que quieres que esten protegidas por el login
 export const config = {
-    matcher : ['/','/app/Map','/app/Catalog','/app/MapClient','/app/CatalogClient']
+    matcher : ['/','/app/Map','/app/Catalog']
 }

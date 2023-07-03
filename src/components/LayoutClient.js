@@ -1,15 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useContext } from 'react';
-import AppContext from '@/Global/userContext';
 import { FaUserAlt } from "react-icons/fa";
-import { useLogout } from "@/hooks/useLogout";
 
 /*Global layout*/
 const LayoutClient = ({children}) => {
     
-    const context = useContext(AppContext);
-    const {logOut} = useLogout();
 
     return(
         <>
@@ -27,10 +22,9 @@ const LayoutClient = ({children}) => {
                         <Link className="m-4 hover:text-purple-200 hover:underline" href='/app/CatalogClient'>ADU Catalog</Link>
                     </span>
                 </li>
-                <div className=" float-right w-[12%]">
-                    <FaUserAlt className="w-4 h-5 mt-[-20px]"/>
-                    <p className="mt-[-21px] ml-7">{context.userContext.username}</p>
-                    <button className="float-right mt-[-24px]" onClick={logOut}>Sing out</button>
+                <div className=" float-right w-[6%] flex mt-[-20px]">
+                        <FaUserAlt className="mt-1"></FaUserAlt>
+                        <Link className="ml-2" href='/app/Login'>Sing In</Link>
                 </div> 
             </div>
 
