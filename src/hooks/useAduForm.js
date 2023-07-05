@@ -4,7 +4,7 @@ import { useRef } from "react";
 import {  useContext, useEffect, useState } from "react"
 
 
-export const useAduForm = () => {
+export const useAduForm = (modal) => {
 
     const [adu,setAdu] = useState({
         name: '',
@@ -13,8 +13,10 @@ export const useAduForm = () => {
         height: 0
     });
 
+    const [error,setError] = useState(false);
+
     const context = useContext(AppContext);
-    
+    const aduFormRef = useRef();
     
     const handleChange = (e) => {
         e.preventDefault();
@@ -30,25 +32,33 @@ export const useAduForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try{
-            const response = await axios.post('https://pfa-production.up.railway.app/pfa/adu',adu, {
-                headers: { 'Content-Type': 'multipart/form-data',  'Authorization': `Bearer ${context.tokenContext}`,},
-                mode: 'cors',  
-            });
-            setAdu({
-                name: '',
-                fts: 0,
-                image: '',
-                height: 0
-            })
+        const extention = adu.image.split('.').pop();
 
-            alert('ADU saved...')
-            console.log(response);
-        }catch(error){
-            console.log(error);
+        if(extention === "png" || extention === "jpg" || extention === "jpeg") {
+            try{
+                const response = await axios.post('https://pfa-production.up.railway.app/pfa/adu',adu, {
+                    headers: { 'Content-Type': 'multipart/form-data',  'Authorization': `Bearer ${context.tokenContext}`,},
+                    mode: 'cors',  
+                });
+                setAdu({
+                    name: '',
+                    fts: 0,
+                    image: '',
+                    height: 0
+                })
+    
+                if(response.status == 202){
+                    modal(true);
+                    aduFormRef.current.reset();
+                }
+            }catch(error){
+                console.log(error);
+            }
+        }else{
+           setError(true);
         }
     }
 
 
-    return {handleChange, handleSubmit}
+    return {handleChange, handleSubmit,aduFormRef,error,setError}
 }

@@ -1,7 +1,7 @@
 import { useRequestAdu } from "@/hooks/useRequestAdu";
 import BuildingForm from "./BuildingForm";
 
-const ModalRequest = ({close,name,id}) => {
+const ModalRequest = ({close,name,id,closeRequest}) => {
 
 
     return(
@@ -20,7 +20,7 @@ const ModalRequest = ({close,name,id}) => {
                         </div>
                       
                         
-                        <BuildingForm idRequest={id} closeModal={close}></BuildingForm>   
+                        <BuildingForm idRequest={id} closeModal={close} closeReq={closeRequest}></BuildingForm>   
                     </div>
                 </div>
             </div> 

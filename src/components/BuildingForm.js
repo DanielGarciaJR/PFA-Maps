@@ -1,8 +1,8 @@
 import { useBuildingForm } from "@/hooks/useBuildingForm";
 
-const BuildingForm = ({idRequest}) => {
+const BuildingForm = ({idRequest,closeReq}) => {
     
-    const {handleChange,handleSubmit, buildingFormRef } = useBuildingForm(idRequest);
+    const {handleChange,handleSubmit, buildingFormRef } = useBuildingForm(idRequest,closeReq);
     
     return(
         <form onSubmit={handleSubmit} ref={buildingFormRef}>

@@ -221,7 +221,8 @@ export const useTilesetsClient = (coordinates, setHoverCoordinates,setHoverCurre
      
         try{
           const bbox = '-124.409619,32.534156,-114.131211,42.009518';
-          const res = await fetch(`${process.env.GEOCODING_URL}mapbox.places/${longitude},${latitude}.json?access_token=${process.env.MAPBOX_TOKEN}&country=us&bbox=${bbox}`);
+          const res = await fetch(`${process.env.GEOCODING_URL}mapbox.places/${longitude},${latitude}.json?access_token=${process.env.MAPBOX_TOKEN}&
+          country=us&bbox=${bbox}`);
           const data = await res.json();
   
           setHoverCoordinates({

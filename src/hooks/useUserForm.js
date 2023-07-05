@@ -1,8 +1,8 @@
 import axios from "axios";
 import AppContext from "@/Global/userContext";
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 
-export const useUserForm = () => {
+export const useUserForm = (modal) => {
 
     const [newUser, setNewUser] = useState({
         name: '',
@@ -11,6 +11,9 @@ export const useUserForm = () => {
         email: '',
         roles: []
     });
+
+    const [error,setError] = useState(false);
+    const userFormRef = useRef(null)
 
     const context = useContext(AppContext);
 
@@ -42,14 +45,15 @@ export const useUserForm = () => {
             });  
             
             if(response.status == 202){
-                alert('User added');
+                modal(true);
+                userFormRef.current.reset();
             }
         }catch(error){
-            console.log(error);
+           setError(error.response.data.data);
         }
     }
 
 
-    return {handleChange,handleSubmit}
+    return {handleChange,handleSubmit,error,setError,userFormRef}
 
 }

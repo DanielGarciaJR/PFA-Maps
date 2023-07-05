@@ -1,11 +1,12 @@
 import { useAduForm } from "@/hooks/useAduForm";
+import ErrorMessage from "./ErrorMessage";
 
-const AduForm = () => {
+const AduForm = ({showModal}) => {
 
-    const { handleChange, handleSubmit} = useAduForm();
+    const { handleChange, handleSubmit,aduFormRef,error,setError} = useAduForm(showModal);
 
     return(
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} ref={aduFormRef}>
                 <div className="mb-6">
                     <label className="block mb-2 text-sm font-medium text-gray-900">ADU Name</label>
                     <input onChange={handleChange}  name="name" type="text" placeholder="adu 1..." className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg   block w-full p-2.5"  required></input>
@@ -20,8 +21,11 @@ const AduForm = () => {
                 </div>
                 <div className="mb-6">
                     <label  className="block mb-2 text-sm font-medium text-gray-900">ADU Image</label>
-                     <input onChange={handleChange} name="image" type="file"  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required></input>
+                     <input  onBlur={() => setError(false)}  onChange={handleChange} name="image" type="file"  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required></input>
                 </div>
+
+                {error && <ErrorMessage><p className="text-[12px] bg-red-200 p-3 items-center justify-center flex mb-5 text-red-500">Error, only png,jpg,jpeg extention supported</p></ErrorMessage>}
+
                 
                 <div className="flex items-center justify-center">
                     <button type="submit"  className=" text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  sm:w-auto px-32 py-2.5 text-center dark:bg-purple-600">

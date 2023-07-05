@@ -14,5 +14,5 @@ export const useRequestAdu = () => {
     }
 
 
-    return {showModal,modal,closeModal}
+    return {showModal,modal,closeModal,setModal}
 }

@@ -2,7 +2,7 @@ import { useState, useContext, useRef } from "react"
 import axios from "axios";
 import AppContext from "@/Global/userContext";
 
-export const useBuildingForm = (id) => {
+export const useBuildingForm = (id,closeModal) => {
 
     const [request,setRequest] = useState({
         client_name: "",
@@ -38,7 +38,6 @@ export const useBuildingForm = (id) => {
                 headers: { 'Content-Type': 'multipart/form-data',  'Authorization': `Bearer ${context.tokenContext}`,},
                 mode: 'cors',  
             });
-            console.log(response);
 
             setRequest({
                 client_name: "",
@@ -49,10 +48,9 @@ export const useBuildingForm = (id) => {
 
             if(response.status == 202){
                 alert('Done!,We will review your request');
-                buildingFormRef.current.reset();    
+                buildingFormRef.current.reset(); 
+                closeModal(false);
             }
-            
-            //location.reload();
         }catch(error){
             console.log(error);
         }  

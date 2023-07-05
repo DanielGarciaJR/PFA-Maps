@@ -6,11 +6,11 @@ import ModalRequest from "./ModalRequest.js";
 
 const AduContainerClient = ({aduDt}) => {
    
-    const {showModal,modal,closeModal} = useRequestAdu()
+    const {showModal,modal,closeModal,setModal} = useRequestAdu()
 
     return(
         <>
-                {modal && <ModalRequest close={closeModal} name={aduDt.name} id={aduDt.id}></ModalRequest>}
+                {modal && <ModalRequest close={closeModal} name={aduDt.name} id={aduDt.id} closeRequest={setModal}></ModalRequest>}
                 
 
 

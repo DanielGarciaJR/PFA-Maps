@@ -2,7 +2,7 @@ import { useContext } from "react";
 import AppContext from "@/Global/userContext";
 import axios from "axios"
 
-export const useDeleteAdu = (id) => {
+export const useDeleteAdu = (id,showModal) => {
 
     const context = useContext(AppContext);
 
@@ -14,7 +14,11 @@ export const useDeleteAdu = (id) => {
                 headers: { 'Content-Type': 'multipart/form-data',  'Authorization': `Bearer ${context.tokenContext}`,},
                 mode: 'cors',  
             });
-            console.log(response);
+          
+            if(response.status == 201){
+                showModal(true);
+            }
+            
         }catch(error){
             console.log(error);
         }
