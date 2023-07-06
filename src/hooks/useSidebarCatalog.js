@@ -4,19 +4,23 @@ export const useSidebarCatalog = () => {
 
     const [section,setSeccion] = useState({
         aduDetails : true,
-        addUsers : false
+        addUsers : false,
+        aduRequest: false
     });
 
     const loadDetailSection = () => {
-       
 
-        setSeccion({aduDetails : true,addUsers : false});
+        setSeccion({aduDetails : true,addUsers : false,aduRequest: false});
     }
 
     const loadAddSection = () => {
 
-        setSeccion({aduDetails : false,addUsers :true})
+        setSeccion({aduDetails : false,addUsers :true,aduRequest:false});
     }
 
-    return { loadDetailSection, loadAddSection, section }
+    const loadRequestSection = () => {
+        setSeccion({aduDetails: false,addUsers:false,aduRequest:true})
+    }
+
+    return { loadDetailSection, loadAddSection,loadRequestSection, section }
 }

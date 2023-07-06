@@ -10,7 +10,7 @@ const AddUserSection = () => {
 
 
     return(
-        <div className="p-10 w-[140%] ">
+        <div className="p-10 w-[140%]">
             {showUserModal && <UserAddedModal closeModal={setUserModal}>
                 <Image
                     className="ml-[30%] pt-[10%] mt-[20%]"
