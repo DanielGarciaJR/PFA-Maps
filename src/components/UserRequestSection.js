@@ -1,11 +1,8 @@
-import AppContext from '@/Global/userContext';
-import { useUserRequestSection } from '@/hooks/useUserRequestSection'
-import React, { useContext } from 'react'
+import React, {  useState } from 'react'
 import TableAduRequest from './TableAduRequest';
 
 const UserRequestSection = () => {
-  
-    useUserRequestSection();
+    const [searchClient, setSearchClient] = useState('');
   
     return (
         <div className="p-10 w-[140%]">
@@ -16,7 +13,18 @@ const UserRequestSection = () => {
                 Here you will see the requests made by users related to a specific ADU with pending status
             </p>
 
-           <TableAduRequest></TableAduRequest>
+           <div className="flex items-end justify-end">
+            <input
+                    type="text"
+                    id="default-search"
+                    className='mb-3 border border-3 p-2 w-[25%] rounded-lg shadow-sm pl-4 text-gray-500'
+                    placeholder="Search a client here..."
+                    value={searchClient}
+                    onChange={(e) => setSearchClient(e.target.value)}
+                />
+           </div>
+
+           <TableAduRequest search={searchClient}></TableAduRequest>
         </div>
   )
 }

@@ -26,6 +26,6 @@ export const useUserRequestSection = () => {
         
 
         fetchPendingAdu();
-    },[context.pendingAduReq])
+    })
 
 }

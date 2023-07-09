@@ -8,7 +8,6 @@ const AddUserSection = () => {
 
     const {showUserModal,setUserModal} = useAddedUserModal();
 
-
     return(
         <div className="p-10 w-[140%]">
             {showUserModal && <UserAddedModal closeModal={setUserModal}>

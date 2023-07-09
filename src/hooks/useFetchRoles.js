@@ -8,6 +8,7 @@ export const useFetchRoles = () => {
     const context = useContext(AppContext);
 
     useEffect(() => {
+       
         const fetchRoles = async () => {
             try{
                 const response = await axios.get(`${process.env.BASE_URL_API}/roles`, {
@@ -20,6 +21,7 @@ export const useFetchRoles = () => {
                 console.log('error jeje');
             }
         }
+        
         fetchRoles();
     },[roles]);
 

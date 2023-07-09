@@ -1,7 +1,5 @@
-
 const AduAddedModal = ({children,closeModal}) => {
 
-    
         return(
             <div className='absolute '>
             <div  className="fixed w-full p-4 overflow-x-hidden overflow-y-auto  max-h-full inset-0 bg-black opacity-[90%] ">

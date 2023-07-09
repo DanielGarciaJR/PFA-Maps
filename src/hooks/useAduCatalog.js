@@ -8,16 +8,15 @@ export const useAduCatalog = () => {
         const fetchData = async () => {
              // Fetch data from external API
             const res = await fetch(`https://pfa-production.up.railway.app/pfa/adu`, {
-            headers: { 'Content-Type': 'multipart/form-data',  'Authorization': `Bearer ${context.tokenContext}`,},
+             headers: { 'Content-Type': 'multipart/form-data',  'Authorization': `Bearer ${context.tokenContext}`,},
              mode: 'cors',  
         });
 
         const data = await res.json();
         context.setAduContext(data);
-        }
+    }
         
-        fetchData();
+    fetchData();
 
     },[context.aduContext])
-
 };

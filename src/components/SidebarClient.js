@@ -1,7 +1,6 @@
 import { FaLaptopHouse } from 'react-icons/fa';
 import LocationForm from './LocationForm';
 import TilesetContainer from './TilesetContainer';
-import GeojsonForm from './GeojsonForm';
 
 
 /*Component to show tileset Information*/

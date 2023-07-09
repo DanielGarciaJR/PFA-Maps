@@ -1,5 +1,3 @@
-import ModalRequest from "./ModalRequest";
-
 const ModalLayout = ({children,closeModal}) => {
     return(
         <div className='absolute '>

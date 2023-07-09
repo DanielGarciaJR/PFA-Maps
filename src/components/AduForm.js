@@ -24,7 +24,11 @@ const AduForm = ({showModal}) => {
                      <input  onBlur={() => setError(false)}  onChange={handleChange} name="image" type="file"  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required></input>
                 </div>
 
-                {error && <ErrorMessage><p className="text-[12px] bg-red-200 p-3 items-center justify-center flex mb-5 text-red-500">Error, only png,jpg,jpeg extention supported</p></ErrorMessage>}
+                {error && <ErrorMessage>
+                    <p className="text-[12px] bg-red-200 p-3 items-center justify-center flex mb-5 text-red-500">
+                        Error, only png,jpg,jpeg extention supported
+                    </p>
+                </ErrorMessage>}
 
                 
                 <div className="flex items-center justify-center">

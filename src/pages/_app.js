@@ -11,6 +11,9 @@ export default function App({ Component, pageProps }) {
   const [tokenContext, setTokenContext] = useState('');
   const [aduContext,setAduContext] = useState([]);
   const [pendingAduReqContext,setPendingAduReqContext] = useState([]);
+  const [aduInProgress,setAduInProgress] = useState([]);
+  
+
 
   return(
     <>
@@ -18,7 +21,7 @@ export default function App({ Component, pageProps }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <AppContext.Provider value={{userContext,setUserContext,tokenContext,setTokenContext,aduContext,setAduContext,pendingAduReqContext,setPendingAduReqContext}}>
+      <AppContext.Provider value={{userContext,setUserContext,tokenContext,setTokenContext,aduContext,setAduContext,pendingAduReqContext,setPendingAduReqContext,aduInProgress,setAduInProgress}}>
         <Component {...pageProps} /> 
       </AppContext.Provider>
     </>

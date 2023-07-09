@@ -1,7 +1,7 @@
+import {  useContext, useState } from "react"
+import { useRef } from "react";
 import AppContext from "@/Global/userContext";
 import axios from "axios";
-import { useRef } from "react";
-import {  useContext, useEffect, useState } from "react"
 
 
 export const useAduForm = (modal) => {
@@ -28,7 +28,6 @@ export const useAduForm = (modal) => {
     }
 
     
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 

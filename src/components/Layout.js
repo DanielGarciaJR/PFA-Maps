@@ -1,10 +1,9 @@
+import { useLogout } from "@/hooks/useLogout";
+import { useContext } from 'react';
+import { FaUserAlt } from "react-icons/fa";
+import AppContext from '@/Global/userContext';
 import Head from "next/head";
 import Link from "next/link";
-import { useContext } from 'react';
-import AppContext from '@/Global/userContext';
-import { FaUserAlt } from "react-icons/fa";
-import { useLogout } from "@/hooks/useLogout";
-
 
 /*Global layout*/
 const Layout = ({children}) => {

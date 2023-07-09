@@ -1,11 +1,10 @@
+import { FaUserAlt } from "react-icons/fa";
 import Head from "next/head";
 import Link from "next/link";
-import { FaUserAlt } from "react-icons/fa";
 
 /*Global layout*/
 const LayoutClient = ({children}) => {
     
-
     return(
         <>
             <Head>

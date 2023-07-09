@@ -1,14 +1,14 @@
+import { useAddedAduModal } from "@/hooks/useAddedAduModal";
+import { useModalLayout } from "@/hooks/useModalLayout";
+import { useAduCatalog } from "@/hooks/useAduCatalog";
+import { useContext } from "react";
 import AppContext from "@/Global/userContext";
 import AduForm from "@/components/AduForm";
 import AduContainer from "./AduContainer";
-import { useAduCatalog } from "@/hooks/useAduCatalog";
-import { useContext } from "react";
-import { useModalLayout } from "@/hooks/useModalLayout";
 import ModalLayout from "./ModalLayout";
-import Image from "next/image";
 import NoDataContainer from "./NoDataContainer";
-import { useAddedAduModal } from "@/hooks/useAddedAduModal";
 import AduAddedModal from "./AduAddedModal";
+import Image from "next/image";
 
 
 const AduDetailSection = () => {
@@ -33,7 +33,9 @@ const AduDetailSection = () => {
               >
               </Image>
               <div>
-                <p className="text-[26px] text-white flex p-5 items-center justify-center ">ADU deleted succesfully</p>
+                <p className="text-[26px] text-white flex p-5 items-center justify-center ">
+                  ADU deleted succesfully
+                </p>
               </div>
             </ModalLayout>}
 
@@ -48,23 +50,25 @@ const AduDetailSection = () => {
               >
               </Image>
               <div>
-                <p className="text-[26px] text-white flex p-5 items-center justify-center ">ADU added succesfully</p>
+                <p className="text-[26px] text-white flex p-5 items-center justify-center ">
+                  ADU added succesfully
+                </p>
               </div>
             </AduAddedModal>}
 
-
             <div>
-                <h2 className="text-[30px]  text-gray-500">Add & consult all about ADU information</h2>
+                <h2 className="text-[30px]  text-gray-500">
+                  Add & consult all about ADU information
+                </h2>
             </div>
             <div className="flex mt-5 ">
                 <div className=" p-16 w-[48%] mr-[1%]  bg-white border border-gray-200 rounded-lg shadow md:flex-row">
-                    <AduForm showModal={setAduAddedModal} />
+                    <AduForm showModal={setAduAddedModal}/>
                 </div>
-                <div className="w-[60%] h-[580px] rounded-lg  overflow-y-scroll ">
-                {context.aduContext.length == 0 ? <NoDataContainer/> : (
+                <div className="w-[60%] h-[580px] rounded-lg  overflow-y-scroll">
+                  {context.aduContext.length == 0 ? <NoDataContainer/> : (
                      context.aduContext.map((el,index) => <AduContainer key={index} adu={el} modal={setShowModal}/> )
-                )}
-                   
+                  )}  
                 </div>
             </div>
         </div>
